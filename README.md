@@ -123,7 +123,7 @@ git diff --check
 | 熊梓淇 | — |
 | 嘎松卓玛 | — |
 | 贵桑德吉 | — |
-| 张力文 | — |
+| 张力文 | [alexwen111](https://github.com/alexwen111) |
 | 王涛 | — |
 | 俞楷锋 | — |
 | 戴欣阳 | — |
