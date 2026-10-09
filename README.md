@@ -63,7 +63,7 @@ git diff --check
 | 龚思浓 | [cascade-0307](https://github.com/cascade-0307) |
 | 王思怡 | — |
 | 陆雯宇 | — |
-| 王小予 | [kayaksss]—(https://github.com/kayaksss) |
+| 王小予 | [kayaksss](https://github.com/kayaksss) |
 | 徐鸿影 | [usagi487](https://github.com/usagi487) |
 | 李明媛 | — |
 | 张奕涵 | — |
