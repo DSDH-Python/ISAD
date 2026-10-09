@@ -78,7 +78,7 @@ git diff --check
 | 夏薇 | — |
 | 闫玉菲 | — |
 | 罗琳 | — |
-| 肖昳霖 | — |
+| 肖昳霖 | [ShellFish3568](https://github.com/ShellFish3568) |
 | 江文欣 | — |
 | 刘雨霏 | [MIAgitup](https://github.com/MIAgitup) |
 | 王檬缘 | — |
