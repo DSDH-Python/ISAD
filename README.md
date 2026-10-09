@@ -100,7 +100,7 @@ git diff --check
 | 周煜莹 | — |
 | 顾金昊 | — |
 | 李沁婷 | — |
-| 谢礼翰 | — |
+| 谢礼翰 |https://CRH2A2007.com |
 | 瞿李睿 | [qulirui](https://github.com/qulirui) |
 | 王妍佳 | — |
 | 胡圆圆 | [soydcjus](https://github.com/soydcjus) |
