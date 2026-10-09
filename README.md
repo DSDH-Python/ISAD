@@ -79,7 +79,7 @@ git diff --check
 | 闫玉菲 | — |
 | 罗琳 | — |
 | 肖昳霖 | — |
-| 江文欣 | — |
+| 江文欣 | [jjjj061118](https://github.com/jjjj061118) |
 | 刘雨霏 | [MIAgitup](https://github.com/MIAgitup) |
 | 王檬缘 | — |
 | 甘宇涵 | — |
