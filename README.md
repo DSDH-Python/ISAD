@@ -120,7 +120,7 @@ git diff --check
 | 林玮辰 | — |
 | 李可玥 | — |
 | 王争帅 | — |
-| 熊梓淇 | https://github.com/Xiong-zi-qi/- |
+| 熊梓淇 | https://github.com/Xiong-zi-qi/-|
 | 嘎松卓玛 | — |
 | 贵桑德吉 | — |
 | 张力文 | — |
