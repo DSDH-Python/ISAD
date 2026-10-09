@@ -71,7 +71,7 @@ git diff --check
 | 王耀主 | — |
 | 郭晓晗 | — |
 | 丁燕楠 | — |
-| 江翊宁 | [fall2138](https://github.com/fall12138) |
+| 江翊宁 | [fall12138](https://github.com/fall12138) |
 | 唐嘉卓 | — |
 | 周振豪 | — |
 | 蔡可欣 | — |
