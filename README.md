@@ -111,7 +111,7 @@ git diff --check
 | 魏佳琪 | — |
 | 陆伊琳 | — |
 | 于溪语 | — |
-| 赵奕佳 | — |
+| 赵奕佳 |[qtdmt0427-ship-it](https://github.com/qtdmt0427-ship-it) |
 | 王天岑 | — |
 | 王语嫣 | — |
 | 杨纯淳 | — |
