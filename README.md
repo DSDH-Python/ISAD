@@ -60,7 +60,7 @@ git diff --check
 | 顾家僖 | — |
 | 窦玮琦 | — |
 | 吴思逸 | — |
-| 龚思浓 | — |
+| 龚思浓 | [cascade-0307](https://github.com/cascade-0307) |
 | 王思怡 | — |
 | 陆雯宇 | — |
 | 王小予 | — |
