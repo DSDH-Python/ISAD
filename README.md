@@ -98,7 +98,7 @@ git diff --check
 | 周倩颖 | — |
 | 艾克代·艾麦提 | — |
 | 周煜莹 | — |
-| 顾金昊 | [MIAgitup](https://github.com/MIAgitup) |
+| 顾金昊 | [wudengfen-gjh](https://github.com/wudengfen-gjh) |
 | 李沁婷 | — |
 | 谢礼翰 | — |
 | 瞿李睿 | [qulirui](https://github.com/qulirui) |
