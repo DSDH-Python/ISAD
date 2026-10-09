@@ -15,7 +15,7 @@
 | [`style.css`](style.css)、[`app.js`](app.js) | 全站样式与交互 |
 | [`images/`](images/)、[`media/`](media/) | 教材配图、操作截图与案例素材 |
 | [`media/前沿文献_候选清单.md`](media/前沿文献_候选清单.md)、[`media/AI蓝皮书.md`](media/AI蓝皮书.md) | 补充阅读资料 |
-| [`media/智能体创新实践汇编_案例提取.md`](media/智能体创新实践汇编_案例提取.md)、[`pages/智能体创新实践汇编_思维导图.html`](pages/智能体创新实践汇编_思维导图.html) | 教材相关补充资料 |
+| [`media/智能体创新实践汇编_案例提取.md`](media/智能体创新实践汇编_案例提取.md)、[`pages/智能体创新实践汇编_思维导图.html`](pages/智能体创新实践汇编_思维导图.html) | ... |
 | [`media/职业与资格速查表.docx`](media/职业与资格速查表.docx) | 职业与资格参考 |
 | [`github+VScode.md`](github+VScode.md)、[`media/`](media/) 中的截图 | Git 与 VS Code 使用说明及配图 |
 
@@ -124,6 +124,6 @@ git diff --check
 | 嘎松卓玛 | — |
 | 贵桑德吉 | — |
 | 张力文 | — |
-| 王涛 | — |
+| 王涛 | [wt192349](https://github.com/wt192349) |
 | 俞楷锋 | — |
 | 戴欣阳 | — |
