@@ -76,7 +76,7 @@ git diff --check
 | 周振豪 | — |
 | 蔡可欣 | — |
 | 夏薇 | — |
-| 闫玉菲 | — |
+| 闫玉菲 | [beautifu1-girl2006](https://github.com/beautifu1-girl2006) |
 | 罗琳 | — |
 | 肖昳霖 | — |
 | 江文欣 | — |
