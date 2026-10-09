@@ -24,8 +24,8 @@
 - 从 [`html教材/index.html`](html教材/index.html) 浏览教材。
 - 在 [`games/`](games/) 中打开 `game_chNN.html` 体验对应章节练习。
 - 根目录 [`index.html`](index.html) 是 GitHub Pages 首页入口，会跳转到教材门户。
-- 章节及附录正文分别位于 [`html教材/`](html教材/) 和 [`pages/`](pages/)。旧网址跳转页收纳在 [`pages/legacy/`](pages/legacy/)；根目录只保留首页，旧的根路径�[...]
-- 使用 VS Code 和 Git 的说明见 [`github+VScode.md`](github+VScode.md)。
+-章节及附录正文分别位于html教材/`](html教材/)和[`pages/`](pages/)。旧网址跳转页收纳在[`pages/legacy/`](pages/legacy/)；根目录只保留首页，旧的根路径[
+-有关使用 VS Code 和 Git 的说明，请参见[`github+VScode.md`](github+VScode.md)。
 
 教材章节位于 `html教材/`，通过相对路径引用根目录中的样式、脚本、图片、媒体和练习。请勿删除仍被页面引用的资源。
 
@@ -77,12 +77,12 @@ git diff --check
 | 蔡可欣 | — |
 | 夏薇 | — |
 | 闫玉菲 | — |
-| 罗琳 | — |
-| 肖昳霖 | — |
-| 江文欣 | — |
-| 刘雨霏 | [MIAgitup](https://github.com/MIAgitup) |
-| 王檬缘 | — |
-| 甘宇涵 | — |
+| 罗琳 |R0salind225（https://github.com/Rosalind225）。
+ 肖昳霖  — 
+ 江文欣  — 
+ 刘雨霏  [MIAgitup](https://github.com/MIAgitup) 
+ 王檬缘 | — |
+ 甘宇涵  — |
 | 李子妍 | — |
 | 王宇 | — |
 | 王思彤 | — |
