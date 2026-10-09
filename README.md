@@ -56,7 +56,7 @@ git diff --check
 | 胡敏 | — |
 | 徐吉涛 | [XJT200510](https://github.com/XJT200510) |
 | 张辰宇 | — |
-| 赫然·斗漫呢 | — |
+| 赫然·斗漫呢 | [herandoumanne](https://github.com/herandoumanne) |
 | 顾家僖 | — |
 | 窦玮琦 | — |
 | 吴思逸 | — |
