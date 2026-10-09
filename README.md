@@ -87,7 +87,7 @@ git diff --check
 | 王宇 | [xinghuo-wy](https://github.com/xinghuo-wy) |
 | 王思彤 | [wincent928](https://github.com/wincent928) |
 | 俞思文 | — |
-| 成塘 | — |
+| 成塘 | [Plug2778](https://github.com/Plug2778) |
 | 何梓萱 | — |
 | 胡佳宁 | — |
 | 董润叶 | — |
