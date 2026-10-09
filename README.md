@@ -110,7 +110,7 @@ git diff --check
 | 华本源 | — |
 | 魏佳琪 | — |
 | 陆伊琳 | — |
-| 于溪语 | — |
+| 于溪语 | [Ruirui-Sketch](https://github.com/Ruirui-Sketch) | 
 | 赵奕佳 | — |
 | 王天岑 | — |
 | 王语嫣 | — |
