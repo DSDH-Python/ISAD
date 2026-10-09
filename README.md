@@ -54,7 +54,7 @@ git diff --check
 | 丁家友 | [sghpedc5279](https://github.com/sghpedc5279) |
 | 李美琪 | — |
 | 胡敏 | — |
-| 徐吉涛 | — |
+| 徐吉涛 | [XJT200510](https://github.com/XJT200510) |
 | 张辰宇 | — |
 | 赫然·斗漫呢 | — |
 | 顾家僖 | — |
@@ -80,7 +80,7 @@ git diff --check
 | 罗琳 | — |
 | 肖昳霖 | — |
 | 江文欣 | — |
-| 刘雨霏 | — |
+| 刘雨霏 | [MIAgitup](https://github.com/MIAgitup) |
 | 王檬缘 | — |
 | 甘宇涵 | — |
 | 李子妍 | — |
