@@ -105,7 +105,7 @@ git diff --check
 | 王妍佳 | — |
 | 胡圆圆 | [soydcjus](https://github.com/soydcjus) |
 | 沈慧 | [shiloh2006](https://github.com/shiloh2006) |
-| 瞿欣媛 | — |
+| 瞿欣媛 | [qxy1201](https://github.com/qxy1201) |
 | 武晨雨 | — |
 | 华本源 | — |
 | 魏佳琪 | [Weijiaqi2503408055](https://github.com/Weijiaqi2503408055) |
