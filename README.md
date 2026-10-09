@@ -85,7 +85,7 @@ git diff --check
 | 甘宇涵 | — |
 | 李子妍 | — |
 | 王宇 | — |
-| 王思彤 | — |
+| 王思彤 |[wincent928](https://github.com/wincent928) |
 | 俞思文 | — |
 | 成塘 | — |
 | 何梓萱 | — |
