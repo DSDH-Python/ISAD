@@ -60,7 +60,7 @@ git diff --check
 | 顾家僖 | — |
 | 窦玮琦 | [doradora0222](https://github.com/doradora0222) |
 | 吴思逸 | — |
-| 龚思浓 | — |
+| 龚思浓 | [cascade-0307](https://github.com/cascade-0307) |
 | 王思怡 | — |
 | 陆雯宇 | — |
 | 王小予 | — |
@@ -78,7 +78,7 @@ git diff --check
 | 夏薇 | [tangshi1999](https://github.com/tangshi1999) |
 | 闫玉菲 | — |
 | 罗琳 | — |
-| 肖昳霖 | — |
+| 肖昳霖 | [ShellFish3568](https://github.com/ShellFish3568) |
 | 江文欣 | [jjjj061118](https://github.com/jjjj061118) |
 | 刘雨霏 | [MIAgitup](https://github.com/MIAgitup) |
 | 王檬缘 | — |
@@ -103,7 +103,7 @@ git diff --check
 | 谢礼翰 | — |
 | 瞿李睿 | [qulirui](https://github.com/qulirui) |
 | 王妍佳 | — |
-| 胡圆圆 | — |
+| 胡圆圆 | [soydcjus](https://github.com/soydcjus) |
 | 沈慧 | [shiloh2006](https://github.com/shiloh2006) |
 | 瞿欣媛 | — |
 | 武晨雨 | — |
@@ -115,7 +115,7 @@ git diff --check
 | 王天岑 | — |
 | 王语嫣 | [wyy21](https://github.com/wyy21) |
 | 杨纯淳 | [ychunch](https://github.com/ychunch) |
-| 邢杜鑫 | — |
+| 邢杜鑫 | [DDDDDD0108](https://github.com/DDDDDD0108) |
 | 周爱凡 | — |
 | 林玮辰 | — |
 | 李可玥 | — |
