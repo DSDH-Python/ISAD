@@ -70,7 +70,7 @@ git diff --check
 | 姜均亿 | — |
 | 王耀主 | — |
 | 郭晓晗 | [12345asd177](https://github.com/12345asd177) |
-| 丁燕楠 | — |
+| 丁燕楠 | [yanwang-yan](https://github.com/yanwang-yan) |
 | 江翊宁 | [fall12138](https://github.com/fall12138) |
 | 唐嘉卓 | — |
 | 周振豪 | — |
