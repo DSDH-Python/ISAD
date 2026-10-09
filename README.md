@@ -126,4 +126,4 @@ git diff --check
 | 张力文 | — |
 | 王涛 | — |
 | 俞楷锋 | — |
-| 戴欣阳 | — |
+| 戴欣阳 |[EirianDiana](https://github.com/EirianDiana) |
