@@ -56,7 +56,7 @@ git diff --check
 | 胡敏 | — |
 | 徐吉涛 | [XJT200510](https://github.com/XJT200510) |
 | 张辰宇 | [GreenWich480](https://github.com/GreenWich480) |
-| 赫然·斗漫呢 | [herandoumanne](https://github.com/herandoumanne) |
+| 赫然·斗漫呢 | — |
 | 顾家僖 | — |
 | 窦玮琦 | [doradora0222](https://github.com/doradora0222) |
 | 吴思逸 | — |
@@ -88,9 +88,9 @@ git diff --check
 | 王思彤 | [wincent928](https://github.com/wincent928) |
 | 俞思文 | — |
 | 成塘 | — |
-| 何梓萱 | [18356381572-cmd](https://github.com/18356381572-cmd/ISAD) |
+| 何梓萱 | — |
 | 胡佳宁 | — |
-| 董润叶 |[dry558](https://github.com/dry558)|
+| 董润叶 | — |
 | 王晨雨 | — |
 | 曹蕊 | — |
 | 高梓涵 | — |
@@ -100,7 +100,7 @@ git diff --check
 | 周煜莹 | — |
 | 顾金昊 | — |
 | 李沁婷 | — |
-| 谢礼翰 |https://CRH2A2007.com |
+| 谢礼翰 | — |
 | 瞿李睿 | [qulirui](https://github.com/qulirui) |
 | 王妍佳 | — |
 | 胡圆圆 | [soydcjus](https://github.com/soydcjus) |
@@ -122,7 +122,7 @@ git diff --check
 | 王争帅 | — |
 | 熊梓淇 | — |
 | 嘎松卓玛 | — |
-| 贵桑德吉 | — |
+| 贵桑德吉 | [gsdj18](https://github.com/gsdj18)|
 | 张力文 | [alexwen111](https://github.com/alexwen111) |
 | 王涛 | [wt192349](https://github.com/wt192349) |
 | 俞楷锋 | — |
