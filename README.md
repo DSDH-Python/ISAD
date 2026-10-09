@@ -75,7 +75,7 @@ git diff --check
 | 唐嘉卓 | — |
 | 周振豪 | — |
 | 蔡可欣 | — |
-| 夏薇 | — |
+| 夏薇 |[tangshi1999](https://github.com/tangshi1999)|
 | 闫玉菲 | — |
 | 罗琳 | — |
 | 肖昳霖 | — |
