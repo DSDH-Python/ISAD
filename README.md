@@ -66,7 +66,7 @@ git diff --check
 | 王小予 | — |
 | 徐鸿影 | [usagi487](https://github.com/usagi487) |
 | 李明媛 | — |
-| 张奕涵 | — |
+| 张奕涵 | _[zlbkl]https://github.com/zlbkl |
 | 姜均亿 | — |
 | 王耀主 | — |
 | 郭晓晗 | [12345asd177](https://github.com/12345asd177) |
