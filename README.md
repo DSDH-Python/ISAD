@@ -114,7 +114,7 @@ git diff --check
 | 赵奕佳 | — |
 | 王天岑 | — |
 | 王语嫣 | — |
-| 杨纯淳 | — |
+| 杨纯淳 | [ychunch](https://github.com/ychunch) |
 | 邢杜鑫 | — |
 | 周爱凡 | — |
 | 林玮辰 | — |
