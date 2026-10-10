@@ -120,7 +120,7 @@ git diff --check
 | 林玮辰 | — |
 | 李可玥 | [HecateLEE](https://github.com/HecateLEE) |
 | 王争帅 | — |
-| 熊梓淇 | — |
+| 熊梓淇 |Xiong-zi-qi https://github.com/Xiong-zi-qi/-|
 | 嘎松卓玛 | — |
 | 贵桑德吉 | [gsdj18](https://github.com/gsdj18)|
 | 张力文 | [alexwen111](https://github.com/alexwen111) |
