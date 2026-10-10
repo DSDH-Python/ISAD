@@ -102,7 +102,7 @@ git diff --check
 | 李沁婷 | — |
 | 谢礼翰 | — |
 | 瞿李睿 | [qulirui](https://github.com/qulirui) |
-| 王妍佳 | — |
+| 王妍佳 | [ouhuangjianglinme](https://github.com/ouhuangjianglinme) |
 | 胡圆圆 | [soydcjus](https://github.com/soydcjus) |
 | 沈慧 | [shiloh2006](https://github.com/shiloh2006) |
 | 瞿欣媛 | — |
