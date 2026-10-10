@@ -57,7 +57,7 @@ git diff --check
 | 徐吉涛 | [XJT200510](https://github.com/XJT200510) |
 | 张辰宇 | [GreenWich480](https://github.com/GreenWich480) |
 | 赫然·斗漫呢 | — |
-| 顾家僖 | — |
+| 顾家僖 | — |https://github.com/Gugu0422
 | 窦玮琦 | [doradora0222](https://github.com/doradora0222) |
 | 吴思逸 | — |
 | 龚思浓 | [cascade-0307](https://github.com/cascade-0307) |
