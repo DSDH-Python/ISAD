@@ -92,7 +92,7 @@ git diff --check
 | 胡佳宁 | — |
 | 董润叶 | — |
 | 王晨雨 | — |
-| 曹蕊 | — |
+| 曹蕊 |[ruiruirui0719](https://github.com/ruiruirui0719) |
 | 高梓涵 | — |
 | 顾问 | [huitoukanmenkou](https://github.com/huitoukanmenkou) |
 | 周倩颖 | [Sylvia777777](https://github.com/Sylvia777777)|
