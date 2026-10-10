@@ -117,7 +117,7 @@ git diff --check
 | 杨纯淳 | [ychunch](https://github.com/ychunch) |
 | 邢杜鑫 | [DDDDDD0108](https://github.com/DDDDDD0108) |
 | 周爱凡 | — |
-| 林玮辰 | — |
+| 林玮辰 | [lwc-64](https://github.com/lwc-64) |
 | 李可玥 | [HecateLEE](https://github.com/HecateLEE) |
 | 王争帅 | — |
 | 熊梓淇 |Xiong-zi-qi https://github.com/Xiong-zi-qi/-|
