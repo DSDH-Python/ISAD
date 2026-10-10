@@ -65,7 +65,7 @@ git diff --check
 | 陆雯宇 | — |
 | 王小予 | — |
 | 徐鸿影 | [usagi487](https://github.com/usagi487) |
-| 李明媛 | — |
+| 李明媛 | [mingming0808—](https://github.com/mingming0808?tab=repositories) |
 | 张奕涵 | — |
 | 姜均亿 | — |
 | 王耀主 | — |
