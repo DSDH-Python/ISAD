@@ -8,7 +8,7 @@
 
 | 路径 | 内容 |
 | --- | --- |
-| [`html教材/`](html教材/) | 教材门户及第 1–9 章 |
+| [`html教材/`](html教材/) | 教材门户及第 哈哈哈哈章 |
 | [`games/`](games/) | 对应各章的互动练习 |
 | [`pages/appendix.html`](pages/appendix.html) | 课程附录正文 |
 | [`pages/legacy/`](pages/legacy/) | 已归档的章节与附录旧网址跳转页 |
@@ -63,7 +63,7 @@ git diff --check
 | 龚思浓 | [cascade-0307](https://github.com/cascade-0307) |
 | 王思怡 | — |
 | 陆雯宇 | — |
-| 王小予 | — |
+| 王小予 | [kayaksss](https://github.com/kayaksss) |
 | 徐鸿影 | [usagi487](https://github.com/usagi487) |
 | 李明媛 | [mingming0808—](https://github.com/mingming0808?tab=repositories) |
 | 张奕涵 | — |
