@@ -112,7 +112,7 @@ git diff --check
 | 陆伊琳 | — |
 | 于溪语 | — |
 | 赵奕佳 | [qtdmt0427-ship-it](https://github.com/qtdmt0427-ship-it) |
-| 王天岑 | — |
+| 王天岑 | [wangtiancen0927](https://github.com/wangtiancen0927) |
 | 王语嫣 | [wyy21](https://github.com/wyy21) |
 | 杨纯淳 | [ychunch](https://github.com/ychunch) |
 | 邢杜鑫 | [DDDDDD0108](https://github.com/DDDDDD0108) |
