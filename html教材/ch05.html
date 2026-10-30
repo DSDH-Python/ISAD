@@ -46,7 +46,7 @@
 
   <main class="content" data-page-node-id="IgE89DKuegOKAlJrUOriyw">
     <h1 data-page-node-id="zsS45DobYjtwivHFuFKUNd">第 5 章　知识库设计与提示词工程</h1>
-    <p class="progress-txt" data-page-node-id="dZ82weMILdwvMhW1IwipDs">让智能体从"通才"变为领域"专家"：知识 + 提示词。本章掌握提示词编写、RAG 原理与 Coze 知识库配置，这是信息资源管理专业的看家本领。</p>
+    <p class="progress-txt" data-page-node-id="dZ82weMILdwvMhW1IwipDs">让智能体从"通才"变为领域"专家"：知识 + 提示词。本章掌握提示词编写、RAG 原理与知识库接入，比较桌面产品、模型 API 和开源框架中的实现方式，这是信息资源管理专业的看家本领。</p>
 
     
 
@@ -58,7 +58,7 @@
     <span class="mod mod-lead" data-page-node-id="TptbQab4rZLEAuBPIvUJSa">三维学习目标</span>
     <div class="goals" data-page-node-id="D14zGCQHh1PkjjDcfyntyN">
       <div class="goal" data-page-node-id="famBDH2h5aTC2rOnPaHM6C"><b data-page-node-id="gFHs6kHlYtYi1AOYrbtgof">知识</b><br data-page-node-id="Th0QCVlbpPTUO1Jl0IWU7f">理解提示词分类与组成；掌握编写与优化；理解知识库与 RAG 原理。</div>
-      <div class="goal" data-page-node-id="YHo9sprPsH5qtPzIxunHQH"><b data-page-node-id="ChjOSuIAFKE8t0OvhK8kux">能力</b><br data-page-node-id="s4j70o8yMU0vHGlLdDy2Q5">能编写结构化系统提示词；能创建并配置 Coze 知识库；能设置召回与排序参数。</div>
+      <div class="goal" data-page-node-id="YHo9sprPsH5qtPzIxunHQH"><b data-page-node-id="ChjOSuIAFKE8t0OvhK8kux">能力</b><br data-page-node-id="s4j70o8yMU0vHGlLdDy2Q5">能编写结构化系统提示词；能为所选智能体平台或 RAG 框架接入知识源；能设置并评估召回与排序策略。</div>
       <div class="goal" data-page-node-id="ias57NW4IUAVTTin8hetgA"><b data-page-node-id="cLJ6Jfygj0SSgIf0fzMC3C">价值</b><br data-page-node-id="3I5AdD8lgSSs8ndzxP1DHs">树立数据驱动与严谨表述意识；理解"知识+提示词=成功关键"；善用 KB 提示词模板。</div>
     </div>
 
@@ -414,7 +414,7 @@
   <ul data-page-node-id="SAewHGVm4jlOcg6HE2adlY">
     <li data-page-node-id="taBJcC4gBC7Z5RuoHPYrAa">🎯 <b data-page-node-id="E8JmAN4wtsQIRLZTgFkdCG">场景</b>：把流行语（带年份/来源/情感标签）与鸡汤建为 RAG 知识库，做"年度热词问答"和近义检测。</li>
     <li data-page-node-id="LBN6rEji8PkjlSpBcSRZDC">🔧 <b data-page-node-id="mkETJkt2cZEheLkEQsGELi">RAG 落点</b>：用户问"2024 年有哪些职场类热词？"→ 检索增强生成回答；用文本向量找"神马都是浮云"与"都不重要"的近义聚类。</li>
-    <li data-page-node-id="W5xCRlGk30vB4J1uvWzrN2">🤖 <b data-page-node-id="DfMmshiqWieSBXIkI1J2Z9">Coze 实践</b>：知识库 + 工作流节点（年份→检索→大模型汇总→输出卡片），对应本章"知识库即受保护的信息资产"。</li>
+    <li data-page-node-id="W5xCRlGk30vB4J1uvWzrN2">🤖 <b data-page-node-id="DfMmshiqWieSBXIkI1J2Z9">平台实践</b>：以 Qwen-Agent 的 RAG / 工具示例或其他可用平台为例，串联“问题改写→检索→模型汇总→来源标注”，对应本章"知识库即受保护的信息资产"。</li>
   </ul>
 </div>
 <div class="callout tip" data-page-node-id="cExB25YdpQjEnKBYRNVxVL">💡 <b data-page-node-id="aMMdLTbGK0JrT1juJUYMzU">算法冷知识</b>：情感分析（snownlp）——流行语情感极性≈0.5（自嘲混合），鸡汤明显偏高（单向正能量）。两者对比就是一堂"情感特征工程"课；教材第 5 节 <code data-page-node-id="ogshCNqA3XkQX4O5vvED6g">jieba+snownlp+Counter</code> 代码卡片可直接演示。</div>
@@ -481,7 +481,7 @@
     <div class="labtask" data-page-node-id="TBqDiTaLgz4siTQtaSilye">
       <h3 data-page-node-id="B8PahSQH2dF6pBqHlByBIJ">📋 实验任务书</h3>
       <p data-page-node-id="3mj0Xt7MjUxrhsYHTNtfVu"><b data-page-node-id="0ERdaBXmJ75zLefN4X83R7">目标：</b>为项目建立领域知识库并写出结构良好的系统提示词。</p>
-      <p data-page-node-id="ZGUxeBlU4ZYrnLiHrJlZDL"><b data-page-node-id="6UTRARp1R7MiPLmK13HfW8">环境：</b>扣子 Coze 知识库 + 提示词编辑器。</p>
+      <p data-page-node-id="ZGUxeBlU4ZYrnLiHrJlZDL"><b data-page-node-id="6UTRARp1R7MiPLmK13HfW8">环境：</b>任一支持知识库 / RAG 的平台或框架 + 提示词编辑器；也可用本地文档和检索脚本完成实验。</p>
       <p data-page-node-id="Pm4ZOaS62JcICQrXXnhBQp"><b data-page-node-id="h4jrsjuQoBcLbceAW6EJYa">步骤：</b>① 建库（文本/表格/图片）并导入；② 配置召回策略与阈值；③ 写系统提示词（角色/技能/限制/格式）；④ 关联知识库预览测试，对比有无库差异；⑤ 记录参数实验。</p>
       <p data-page-node-id="8oo3lE3U9Eg2XY7cvY1LB0"><b data-page-node-id="5ffcct2iFAO0hFWOyIR1GE">交付物：</b>知识库截图 + 系统提示词终稿 + 召回参数实验记录。</p>
       <p data-page-node-id="PaugMX3Mfya8xYvYnBKVKy"><b data-page-node-id="58lEpKXcz0a2moHAmh2ukP">评分点：</b>知识库配置(25%) · 提示词结构(30%) · 测试对比(30%) · 参数记录(15%)。</p>
@@ -489,7 +489,7 @@
     <h3 class="sec-h" id="labexp">🛠 分步操作 · 为项目创建知识库并编写提示词</h3>
     <span class="mod mod-lab" data-page-node-id="6TqRjLZLpgzOkH9botzXtS">动手 · 分步操作</span>
     <ol data-page-node-id="NWtQyrqOyLhI1mhZG8qZfi">
-      <li data-page-node-id="kQwgKwAPdhFwNPzk1BF6Gh">准备一份领域资料（手册/表格/图片），在 Coze 创建对应类型知识库并导入。</li>
+      <li data-page-node-id="kQwgKwAPdhFwNPzk1BF6Gh">准备一份领域资料（手册/表格/图片），在所选平台或 RAG 框架中建立知识源并导入。</li>
       <li data-page-node-id="9tjBC42uxEjbf2RAEO8IZ4">配置召回策略（混合/语义/全文）、最大召回数量与最小匹配度。</li>
       <li data-page-node-id="y2kygQFZadDKWQq7VMwXM4">编写系统提示词：角色 + 技能 + 限制 + 格式，可套用 KB 角色提示词模板。</li>
       <li data-page-node-id="qJUKshDbGKuXu7xFwcLjT5">在智能体中关联知识库，预览测试；对比"无知识库"与"有知识库"的回答差异。</li>

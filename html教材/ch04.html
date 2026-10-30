@@ -270,14 +270,14 @@
 </figure>
     </div>
 
-      <h3 class="sec-h" id="s42" data-page-node-id="kgVlqcUaYojBu1fZp1wOdk">4.2　智能体架构组成（Coze）</h3>
-    <p data-page-node-id="GoAOKd4XAZnd4f4gt3hioG">一个 Coze 智能体由三块有机组成：</p>
+      <h3 class="sec-h" id="s42" data-page-node-id="kgVlqcUaYojBu1fZp1wOdk">4.2　智能体架构组成</h3>
+    <p data-page-node-id="GoAOKd4XAZnd4f4gt3hioG">不同平台的界面和命名各异，但智能体通常由三类职责组成：</p>
     <ul data-page-node-id="XeVylNTMv9CqPJLxtsmsld">
       <li data-page-node-id="ANsP8qHXgxGE5s3m2XUj5i"><b data-page-node-id="bzYtdk5SUGuJulhNqn34Xp">人设与回复逻辑</b>：定义角色、技能与回复规则（=需求规格），是智能体"大脑"。</li>
-      <li data-page-node-id="GhjE9Kk8SbwT2UfCMVWNKw"><b data-page-node-id="pPfoHIQe3tYo5gogIM0B6w">技能区四件套</b>：插件（调外部 API）/ 工作流（编排多步）/ 知识库（注入领域知识）/ 卡片（富媒体呈现）。</li>
+      <li data-page-node-id="GhjE9Kk8SbwT2UfCMVWNKw"><b data-page-node-id="pPfoHIQe3tYo5gogIM0B6w">工具与知识接口</b>：按产品能力选用连接器 / API / MCP、工作流、知识库或富媒体组件；并非每个平台都提供全部组件。</li>
       <li data-page-node-id="AkU8DsVZuLherdcnSFr3D4"><b data-page-node-id="57X3z3DNxN87ff8k2y7own">记忆区三类</b>：变量（记昵称/进度）/ 数据库（结构化业务数据）/ 记忆库（自动沉淀用户画像）。</li>
     </ul>
-    <p data-page-node-id="Ss4hHVjicQCY5Nv5JAj0hY">编排画布用可视化拖曳节点、连线定义数据流向，支持实时调试与运行日志追踪。</p>
+    <p data-page-node-id="Ss4hHVjicQCY5Nv5JAj0hY">可视化编排工具可用节点与连线定义数据流向；代码框架则通过模块、接口和配置实现同类职责。调试时均应关注输入输出、错误处理与运行日志。</p>
 
     
     <div class="pptgrid" data-cnt="9" data-page-node-id="vDxfJSkUk1TTJF8Cqn5SzK">
@@ -744,7 +744,7 @@
   <ul data-page-node-id="Fk8Y4HFAp8BsM5tJxjHkNB">
     <li data-page-node-id="92Pa26HERDyc0bE27Ss3sC"><b data-page-node-id="nRk25jGhWb1ASbxzo3ONdB">场景：</b>把‘查政策 / 答疑问 / 约咨询’拆成三个子智能体，由一个调度智能体按意图路由——改一个不影响另外两个，正是高内聚低耦合。</li>
     <li data-page-node-id="n8T6OfEKBD6GzoaxcGEKJf"><b data-page-node-id="bA5AUH5TDBnP8MvHZ2CQjE">防御性：</b>总体设计阶段就标注‘如果用户问隐私怎么办’：给拒答边界与转人工节点，设计即伦理。</li>
-    <li data-page-node-id="uj2HqGEKnWNu6kZXwMrT5J"><b data-page-node-id="PlPANzlEBKYsAFlvVTOn4v">映射：</b>本章‘模块 + 接口’思想，对应 Coze 的‘主工作流 + 子工作流/插件’组件划分。</li>
+    <li data-page-node-id="uj2HqGEKnWNu6kZXwMrT5J"><b data-page-node-id="PlPANzlEBKYsAFlvVTOn4v">映射：</b>本章‘模块 + 接口’思想，可映射到各平台的主流程/子流程、工具或技能；也可用 MCP、函数调用或自定义代码实现接口。</li>
   </ul>
 </div>
 
@@ -802,9 +802,9 @@
     <div class="labtask" data-page-node-id="gbWj0f6yLIIqjMNgbJGSo6">
       <h3 data-page-node-id="qtKr64kqZhfLZ4Z2hNGt0l">📋 实验任务书</h3>
       <p data-page-node-id="QMWFsIr8LxRevlx5lfjk3X"><b data-page-node-id="xeKsX6fk2PL0ci7yRVC5t3">目标：</b>基于需求产出可追溯的智能体总体架构图与失效点分析。</p>
-      <p data-page-node-id="hlbq2u5DS3NebbJ8vkwdnK"><b data-page-node-id="mwWwSMt7pZie8FTBoqgq84">环境：</b>扣子 Coze + 绘图工具（纸笔/在线画图均可）。</p>
-      <p data-page-node-id="O8GzEZbSNYruC9ujLMNyfd"><b data-page-node-id="CBNtjXmY3GQNQ66zkEMkgr">步骤：</b>① 画架构图（人设/技能/记忆）；② 标注需求对应；③ 用 KB 防御性设计提示词做失效点分析（3 点 + 恢复机制）；④ 在 Coze 搭建骨架占位。</p>
-      <p data-page-node-id="3XTrWb20msUqzWp5JPm2mx"><b data-page-node-id="YPWDXgOjG2OGyqPivK4coN">交付物：</b>总体架构图 + 失效点分析清单 + Coze 架构骨架截图。</p>
+      <p data-page-node-id="hlbq2u5DS3NebbJ8vkwdnK"><b data-page-node-id="mwWwSMt7pZie8FTBoqgq84">环境：</b>任一可用智能体平台或框架 + 绘图工具（纸笔/在线画图均可）。</p>
+      <p data-page-node-id="O8GzEZbSNYruC9ujLMNyfd"><b data-page-node-id="CBNtjXmY3GQNQ66zkEMkgr">步骤：</b>① 画架构图（人设/技能/记忆）；② 标注需求对应；③ 用 KB 防御性设计提示词做失效点分析（3 点 + 恢复机制）；④ 在选用工具中搭建可演示的骨架或接口原型。</p>
+      <p data-page-node-id="3XTrWb20msUqzWp5JPm2mx"><b data-page-node-id="YPWDXgOjG2OGyqPivK4coN">交付物：</b>总体架构图 + 失效点分析清单 + 原型界面或关键配置截图。</p>
       <p data-page-node-id="KAM114m0kyPDqKyBNxigyf"><b data-page-node-id="y94JiZiW1SS7vv1cwAP6wJ">评分点：</b>架构完整(30%) · 需求可追溯(25%) · 防御性分析(30%) · 骨架搭建(15%)。</p>
     </div>
     <h3 class="sec-h" id="labexp">🛠 分步操作 · 为项目设计智能体总体架构</h3>
@@ -813,7 +813,7 @@
       <li data-page-node-id="p8BoqJ7Zi1FUcHGQbNSDLk">基于第 3 章需求，绘制智能体架构图：人设/回复逻辑 + 技能（插件/工作流/知识库）+ 记忆。</li>
       <li data-page-node-id="wUg83FE5Ib4YGGF6A0guA9">标注每个组件对应的需求条目，体现"需求→架构"可追溯。</li>
       <li data-page-node-id="O9NgMPajoScSVFM5mbPQHp">用 KB《软件防御性设计专家提示词》做一次失效点分析：列 3 个故障点与恢复机制。</li>
-      <li data-page-node-id="Fm6hMDxjf2VhLEV8YTqjq0">在 Coze 中按架构搭建骨架：创建智能体、添加对应技能占位。</li>
+      <li data-page-node-id="Fm6hMDxjf2VhLEV8YTqjq0">在所选工具中按架构搭建骨架：创建智能体、配置对应工具/技能占位，或画出待实现接口。</li>
     </ol>
     <details class="fold" data-page-node-id="OcazxOHdeyGGuWTWQ1phDA">
       <summary data-page-node-id="urPtK6t5NBHspPnFaVCwTh">📝 架构图自检清单</summary>
