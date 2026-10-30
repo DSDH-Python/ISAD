@@ -68,7 +68,7 @@ git diff --check
 | 李明媛 | [mingming0808—](https://github.com/mingming0808?tab=repositories) |
 | 张奕涵 | — |
 | 姜均亿 | — |
-| 王耀主 | — |
+| 王耀主 | [wyz061204](https://github.com/wyz061204)— |
 | 郭晓晗 | [12345asd177](https://github.com/12345asd177) |
 | 丁燕楠 | [yanwang-yan](https://github.com/yanwang-yan) |
 | 江翊宁 | [fall12138](https://github.com/fall12138) |
@@ -76,7 +76,7 @@ git diff --check
 | 周振豪 | — |
 | 蔡可欣 | [0824-maker](https://github.com/0824-maker) |
 | 夏薇 | [tangshi1999](https://github.com/tangshi1999) |
-| 闫玉菲 | — |
+| 闫玉菲 | [beautifu1-girl2006] (https://github.com/beautifu1-girl2006)|
 | 罗琳 | — |
 | 肖昳霖 | [ShellFish3568](https://github.com/ShellFish3568) |
 | 江文欣 | [jjjj061118](https://github.com/jjjjj061118) |
@@ -87,11 +87,11 @@ git diff --check
 | 王宇 | [xinghuo-wy](https://github.com/xinghuo-wy) |
 | 王思彤 | [wincent928](https://github.com/wincent928) |
 | 俞思文 | [yusiwen1021](https://github.com/yusiwen1021) |
-| 成塘 | — |
+| 成塘 |  [plug2778](https://github.com/plug2778) |
 | 何梓萱 | [18356381572-cmd](https://github.com/18356381572-cmd) |
 | 胡佳宁 | — |
 | 董润叶 | — |
-| 王晨雨 | — |
+| 王晨雨 | Y_eaaa0611 |
 | 曹蕊 |[ruiruirui0719](https://github.com/ruiruirui0719) |
 | 高梓涵 | — |
 | 顾问 | [huitoukanmenkou](https://github.com/huitoukanmenkou) |
@@ -110,7 +110,7 @@ git diff --check
 | 华本源 | — |
 | 魏佳琪 | [Weijiaqi2503408055](https://github.com/Weijiaqi2503408055) |
 | 陆伊琳 | evelyn610520 |
-| 于溪语 | — |
+| 于溪语 | [Ruirui-Sketch](https://github.com/Ruirui-Sketch) | 
 | 赵奕佳 | [qtdmt0427-ship-it](https://github.com/qtdmt0427-ship-it) |
 | 王天岑 | [wangtiancen0927](https://github.com/wangtiancen0927) |
 | 王语嫣 | [wyy21](https://github.com/wyy21) |
