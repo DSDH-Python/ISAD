@@ -98,7 +98,7 @@ git diff --check
 | 周倩颖 | [Sylvia777777](https://github.com/Sylvia777777)|
 | 艾克代·艾麦提 | [aabb0101aa](https://github.com/aabb0101aa) |
 | 周煜莹 | [ttaango](https://github.com/ttaango) |
-| 顾金昊 | — |
+| 顾金昊 | [wudengfen-gjh](https://github.com/wudengfen-gjh) |
 | 李沁婷 | — |
 | 谢礼翰 | — |
 | 瞿李睿 | [qulirui](https://github.com/qulirui) |
