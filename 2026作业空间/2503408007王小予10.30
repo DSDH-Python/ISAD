@@ -1,0 +1,696 @@
+## 用例：修改用户名
+参与者：瑞幸小程序用户（主要参与者）、瑞幸后台服务系统（次要参与者）
+目标：用户在瑞幸小程序修改用户名并保存成功
+范围：瑞幸咖啡点单小程序
+前置条件：用户已登录瑞幸小程序，进入个人资料编辑页面
+后置事件：系统记录本次操作日志；修改成功则用户名更新，失败则保留原有用户名
+发生频率：较低，用户一般不会频繁修改用户名
+
+### 主事件流
+1. 用户进入个人资料页，点击用户名编辑入口
+2. 小程序加载并展示当前用户名
+3. 用户输入新的用户名
+4. 用户点击保存，自动检查用户名格式（长度、禁用特殊符号等）
+5. 小程序将新用户名发送给后台系统
+6. 后台校验：检查用户名是否已被占用、是否含敏感内容
+7. 后台更新数据库中的用户名
+8. 后台返回修改成功结果
+9. 小程序提示修改成功，刷新页面展示新用户名
+10. 系统写入操作日志，用例结束
+
+### 备选事件流
+1a：点击用户名编辑入口，页面跳转失败
+1. 提示页面加载失败
+2. 停留在个人资料页，用例结束
+
+2a：网络异常，无法加载当前用户名
+1. 提示网络错误，加载失败
+2. 返回个人主页，用例结束
+
+3a：用户放弃修改，点击返回
+1. 不保存改动，保留原用户名
+2. 返回资料页，用例结束
+
+4a：自动检查不通过（名字太长/太短、包含非法符号）
+1. 弹出格式错误提示
+2. 返回编辑框，回到步骤3重新输入
+
+6a：用户名已被其他用户占用
+1. 提示“该用户名已被占用，请更换”
+2. 返回编辑框，回到步骤3
+
+6b：用户名包含敏感违规词汇
+1. 提示内容违规，无法使用
+2. 返回编辑框，回到步骤3
+
+6c：登录态失效
+1. 提示登录过期，跳转登录页面
+2. 用例终止
+
+6d：服务器故障/网络断开
+1. 提示提交失败，请稍后重试
+2. 停留在编辑页面，可再次提交
+# 图书馆管理系统 · UML 全套建模（9 图）
+
+> PlantUML 标准语法，全部源码已通过 Kroki 服务在线渲染校验（9/9 一次通过）。
+
+> 领域范围：读者管理、馆藏管理、借阅/归还/续借/预约、罚金结算、通知提醒。
+
+## 1. 用例图 Use Case Diagram
+
+**图意**：四个参与者（读者、图书管理员、采编员、系统管理员）与系统的 13 个用例。`<<include>>` 表达借阅必经的资格校验与额度校验，`<<extend>>` 表达归还时可选择触发罚金缴纳（可选分支）。
+
+```plantuml
+@startuml 用例图-图书馆管理系统
+title 图书馆管理系统 · 用例图
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+actor "读者" as Reader
+actor "图书管理员" as Librarian
+actor "采编员" as Acq
+actor "系统管理员" as Admin
+
+rectangle "图书馆管理系统" {
+  usecase "检索图书" as UC1
+  usecase "借阅图书" as UC2
+  usecase "归还图书" as UC3
+  usecase "续借图书" as UC4
+  usecase "预约图书" as UC5
+  usecase "缴纳罚金" as UC6
+  usecase "办理/挂失借书证" as UC7X
+  usecase "验证读者资格" as UC7
+  usecase "校验借阅额度" as UC8
+  usecase "编目入库" as UC9
+  usecase "维护读者档案" as UC10
+  usecase "生成统计报表" as UC11
+  usecase "系统参数配置" as UC12
+  usecase "到期与逾期通知" as UC13
+}
+
+Reader --> UC1
+Reader --> UC2
+Reader --> UC3
+Reader --> UC4
+Reader --> UC5
+Reader --> UC6
+Reader --> UC7X
+
+Librarian --> UC2
+Librarian --> UC3
+Librarian --> UC10
+Librarian --> UC11
+Librarian --> UC6
+
+Acq --> UC9
+Admin --> UC12
+Admin --> UC11
+
+UC2 ..> UC7 : <<include>>
+UC2 ..> UC8 : <<include>>
+UC2 ..> UC13 : <<include>>
+UC3 ..> UC6 : <<extend>>
+UC4 ..> UC8 : <<include>>
+UC5 ..> UC13 : <<include>>
+@enduml
+```
+
+## 2. 类图 Class Diagram
+
+|                              |                                                                                                                                  |       |                                          |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----- | ---------------------------------------- |
+| **图意**：领域模型核心。关系符号严格对应语义：\`< | --` 继承（User→Reader/Librarian/Admin）、`*--` 组合（Book 实心菱形持有 BookCopy，复本不能脱离书目存在）、`o--` 聚合（Book 空心菱形聚合 Author）、`-->` 关联、`..>` 依赖、`.. | >`/`< | ..\` 接口实现（Searchable、FineStrategy 策略模式）。 |
+
+```plantuml
+@startuml 类图-图书馆管理系统
+title 图书馆管理系统 · 领域类图
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+hide circle
+
+abstract class User {
+  # userId : String
+  # name : String
+  # phone : String
+  # status : AccountStatus
+  + login(pwd : String) : boolean
+  + logout() : void
+}
+
+class Reader {
+  - readerId : String
+  - creditScore : int
+  - maxBorrowCount : int
+  - maxBorrowDays : int
+  + borrow(copy : BookCopy) : Loan
+  + renew(loan : Loan) : boolean
+  + reserve(book : Book) : Reservation
+}
+
+class Librarian {
+  - staffId : String
+  - dept : String
+  + handleBorrow(reader : Reader, copy : BookCopy) : Loan
+  + handleReturn(copy : BookCopy) : Loan
+  + collectFine(fine : Fine) : void
+}
+
+class Admin {
+  - role : String
+  + configParam(key : String, value : String) : void
+  + backupDatabase() : void
+}
+
+class ReaderType {
+  - typeId : String
+  - typeName : String
+  - maxBorrowCount : int
+  - maxBorrowDays : int
+  - renewLimit : int
+  + canBorrow(reader : Reader) : boolean
+}
+
+class Book {
+  - isbn : String
+  - title : String
+  - price : BigDecimal
+  - pubDate : Date
+  - summary : String
+  + isBorrowable() : boolean
+}
+
+class BookCopy {
+  - barcode : String
+  - location : String
+  - status : CopyStatus
+  - inDate : Date
+  + isAvailable() : boolean
+}
+
+class Category {
+  - catId : String
+  - name : String
+  - level : int
+}
+
+class Publisher {
+  - pubId : String
+  - name : String
+  - address : String
+}
+
+class Author {
+  - authorId : String
+  - name : String
+  - country : String
+}
+
+class Loan {
+  - loanId : String
+  - borrowDate : Date
+  - dueDate : Date
+  - returnDate : Date
+  - renewCount : int
+  - status : LoanStatus
+  + isOverdue() : boolean
+  + calcOverdueDays() : int
+}
+
+class Reservation {
+  - resId : String
+  - resDate : Date
+  - expireDate : Date
+  - status : ResStatus
+  + isExpired() : boolean
+}
+
+class Fine {
+  - fineId : String
+  - amount : BigDecimal
+  - reason : String
+  - paid : boolean
+  + pay(method : String) : boolean
+}
+
+class Notification {
+  - notifyId : String
+  - channel : String
+  - content : String
+  - sentTime : Date
+  + send() : void
+}
+
+interface Searchable {
+  + search(keyword : String) : List<Book>
+}
+
+interface FineStrategy {
+  + calculate(loan : Loan) : BigDecimal
+}
+
+class OverdueFineStrategy
+class LostFineStrategy
+
+enum CopyStatus {
+  编目中
+  可借
+  已借出
+  预约保留
+  遗失
+  剔除
+}
+
+enum LoanStatus {
+  BORROWED
+  RETURNED
+  OVERDUE
+  LOST
+}
+
+User <|-- Reader
+User <|-- Librarian
+Librarian <|-- Admin
+
+Reader "1" --> "1" ReaderType : 归属
+Reader "1" --> "*" Loan : 发起
+Reader "1" --> "*" Reservation : 提交
+
+Book "1" *-- "1..*" BookCopy : 含复本
+Book o-- "1..*" Author : 著者
+Book --> "1" Publisher : 出版
+Book --> "0..1" Category : 分类
+Category --> Category : 父子类目
+
+BookCopy "1" --> "*" Loan : 被借阅
+Loan "1" --> "0..1" Fine : 产生
+Reservation "*" --> "1" Book : 预约
+Fine ..> FineStrategy : 依赖
+
+Book ..|> Searchable : 实现
+FineStrategy <|.. OverdueFineStrategy : 实现
+FineStrategy <|.. LostFineStrategy : 实现
+
+Reader ..> Notification : 接收
+BookCopy --> CopyStatus
+Loan --> LoanStatus
+@enduml
+```
+
+## 3. 对象图 Object Diagram
+
+**图意**：类图在 2026-10-30 这一时刻的实例快照：读者张伟（R2026001）借出《苏州府志》复本 SU-LIB-0001-03，未逾期因此 Fine 关联为空（0..1 未实例化）。
+
+```plantuml
+@startuml 对象图-借阅实例快照
+title 对象图 · 2026-10-30 借阅实例快照
+skinparam shadowing false
+hide empty members
+
+object "r1 : Reader" as r1 {
+  readerId = "R2026001"
+  name = "张伟"
+  creditScore = 95
+  status = "ACTIVE"
+}
+
+object "t1 : ReaderType" as t1 {
+  typeName = "本科生"
+  maxBorrowCount = 10
+  maxBorrowDays = 30
+}
+
+object "l1 : Loan" as l1 {
+  loanId = "L20261030001"
+  borrowDate = "2026-10-20"
+  dueDate = "2026-11-19"
+  returnDate = null
+  renewCount = 0
+  status = "BORROWED"
+}
+
+object "c1 : BookCopy" as c1 {
+  barcode = "SU-LIB-0001-03"
+  location = "A区 3排 2层"
+  status = "已借出"
+}
+
+object "b1 : Book" as b1 {
+  isbn = "978-7-101-00001-1"
+  title = "苏州府志"
+  price = 128.00
+}
+
+object "a1 : Author" as a1 {
+  name = "卢熊"
+  country = "明"
+}
+
+r1 -- t1 : 归属
+r1 -- l1 : 发起
+l1 -- c1 : 借出对象
+c1 -- b1 : 所属书目
+b1 -- a1 : 著者
+
+note right of l1
+  该借阅尚未逾期（应还日 2026-11-19），
+  故未实例化 Fine 对象，Loan 与 Fine 的
+  0..1 关联当前为空。
+end note
+@enduml
+```
+
+## 4. 时序图 Sequence Diagram
+
+**图意**：借阅主流程 22 步消息：读者→终端→LoanController→各服务→MySQL，含资格校验 note、alt 校验不通过/通过双分支、事务边界说明。消息箭头方向与调用方向一致。
+
+```plantuml
+@startuml 时序图-图书借阅主流程
+title 时序图 · 图书借阅主流程
+autonumber
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+actor "读者" as R
+participant "借阅终端 UI" as UI
+participant "LoanController" as C
+participant "ReaderService" as RS
+participant "BookCopyService" as BS
+participant "LoanRepository" as LR
+participant "NotificationService" as NS
+database "MySQL" as DB
+
+R -> UI : 刷借书证 + 扫描图书条码
+UI -> C : POST /loans {readerId, barcode}
+activate C
+
+C -> RS : getReader(readerId)
+activate RS
+RS --> C : Reader
+deactivate RS
+
+C -> RS : checkEligibility(reader)
+note right of C
+  校验四项：账户状态、借阅额度、
+  是否有逾期未还、是否有未缴罚金
+end note
+RS --> C : EligibilityResult
+
+alt 校验不通过
+  C --> UI : 409 {code, reason}
+  UI --> R : 提示拒借原因
+else 校验通过
+  C -> BS : lockCopy(barcode)
+  activate BS
+  BS --> C : BookCopy(可借)
+  deactivate BS
+
+  C -> LR : save(Loan)
+  activate LR
+  LR -> DB : INSERT INTO loan
+  DB --> LR : ok
+  LR --> C : Loan(loanId, dueDate)
+  deactivate LR
+
+  C -> BS : updateStatus(BORROWED)
+  C -> NS : sendBorrowNotice(reader, dueDate)
+  NS --> R : 短信 / 站内信
+
+  C --> UI : 201 LoanDTO
+  UI --> R : 打印凭条（应还日期）
+end
+
+deactivate C
+
+note over C, DB
+  事务边界：锁定副本 → 写借阅记录 → 改副本状态，
+  三步同一事务，任一步失败整体回滚。
+end note
+@enduml
+```
+
+## 5. 活动图 Activity Diagram（泳道）
+
+**图意**：三个泳道（读者/图书管理员/系统）划分职责，含额度校验判定节点与两级分支合流：额度满→转预约；欠费/逾期→缴纳后重借。
+
+```plantuml
+@startuml 活动图-借阅办理流程
+title 活动图（泳道）· 借阅办理流程
+skinparam shadowing false
+skinparam ActivityDiamondBackgroundColor #FFF6E5
+
+|读者|
+start
+:提交借阅请求\n（刷证 + 扫书）;
+
+|图书管理员|
+:核对证件照片与图书完好度;
+:提交系统办理;
+
+|系统|
+:查询读者状态与信用分;
+:统计在借数量与欠费金额;
+
+if (状态正常\n且额度充足\n且无欠费?) then (是)
+  |系统|
+  :锁定馆藏副本（行级锁）;
+  :生成借阅记录\n（借期 30 天）;
+  :推送到期提醒;
+  |图书管理员|
+  :交付图书并加盖期限章;
+  |读者|
+  :携书离馆;
+  stop
+else (否)
+  |系统|
+  :返回拒借原因码;
+  |图书管理员|
+  :告知读者拒借原因;
+  if (仅因额度已满?) then (是)
+    |读者|
+    :转办预约登记;
+    stop
+  else (否)
+    |读者|
+    :缴纳罚金 / 归还逾期图书;
+    :重新发起借阅;
+    stop
+  endif
+endif
+@enduml
+```
+
+## 6. 组件图 Component Diagram（Legacy 方括号语法）
+
+**图意**：采用 PlantUML Legacy 语法：`[组件名]` 声明组件、`() 接口名` 声明接口、`--` 表示接口实现（提供）、`..>` 表示依赖（调用）。三层结构：前端 → 网关 → 五个业务服务 → MySQL/Redis/短信平台。
+
+```plantuml
+@startuml 组件图-Legacy语法
+title 组件图 · 图书馆管理系统（Legacy 方括号语法）
+skinparam shadowing false
+skinparam componentStyle uml2
+
+package "图书管理系统前端" {
+  [Web 前端 SPA] as UI
+  [馆员工作站客户端] as Desk
+}
+
+package "接入层" {
+  [API 网关] as GW
+}
+
+package "业务服务层" {
+  [借阅服务] as LoanSvc
+  [馆藏服务] as CatSvc
+  [读者服务] as ReaderSvc
+  [检索服务] as SearchSvc
+  [通知服务] as NotifySvc
+}
+
+package "数据与外部依赖" {
+  [MySQL 数据库] as DB
+  [Redis 缓存] as Cache
+  [短信平台] as SMS
+}
+
+() "I借阅" as ILoan
+() "I馆藏" as ICat
+() "I读者" as IReader
+() "I检索" as ISearch
+() "I通知" as INotify
+() "HTTP/JSON" as IHttp
+
+UI - IHttp
+Desk - IHttp
+IHttp -- GW : 提供
+
+GW ..> ILoan : 调用
+GW ..> IReader : 调用
+GW ..> ISearch : 调用
+
+ILoan -- LoanSvc : 实现
+ICat -- CatSvc : 实现
+IReader -- ReaderSvc : 实现
+ISearch -- SearchSvc : 实现
+INotify -- NotifySvc : 实现
+
+LoanSvc ..> ICat : 依赖
+LoanSvc ..> IReader : 依赖
+LoanSvc ..> INotify : 依赖
+SearchSvc ..> ICat : 依赖
+
+LoanSvc ..> DB
+CatSvc ..> DB
+ReaderSvc ..> DB
+SearchSvc ..> Cache
+LoanSvc ..> Cache
+NotifySvc ..> SMS
+@enduml
+```
+
+## 7. 部署图 Deployment Diagram
+
+**图意**：物理拓扑：读者终端与馆员工作站经防火墙/WAF 进入 nginx 负载均衡，双应用服务器跑 Spring Boot，MySQL 主从 + 每日备份到 NAS，Redis 做检索缓存，OSS 存封面与电子书。
+
+```plantuml
+@startuml 部署图-图书馆管理系统
+title 部署图 · 图书馆管理系统
+skinparam shadowing false
+skinparam nodeBackgroundColor #F4F8FC
+
+node "读者终端\n（PC / 手机浏览器）" as Client {
+  artifact "Browser" as BR
+}
+
+node "馆员工作站\n（Windows 10）" as Desk {
+  artifact "LibraryClient.exe" as CL
+}
+
+node "校园网边界" as FW {
+  artifact "防火墙 / WAF" as WAF
+}
+
+node "应用服务器\n（Linux 4C8G）× 2" as App {
+  artifact "nginx 1.24" as NG
+  artifact "library-api.jar\n（Spring Boot）" as API
+  artifact "library-job.jar\n（定时任务）" as JOB
+}
+
+node "缓存服务器\n（Linux 2C4G）" as CacheNode {
+  artifact "Redis 7" as Redis
+}
+
+node "数据库服务器\n（Linux 8C16G，主从）" as DBNode {
+  database "MySQL 8.0 主库" as MySQL
+  database "MySQL 8.0 从库" as MySQLSlave
+}
+
+node "备份存储（NAS）" as Backup {
+  artifact "每日全量备份 + binlog" as BK
+}
+
+cloud "对象存储 OSS\n（封面 / 电子书）" as OSS
+
+BR --> WAF : HTTPS
+CL --> WAF : HTTPS
+WAF --> NG : 反向代理
+NG --> API : 负载均衡
+API --> MySQL : JDBC 3306
+API --> Redis : 6379
+JOB --> MySQL : 批量结算
+MySQL --> MySQLSlave : 主从复制
+MySQL --> BK : 每日 02:00
+API --> OSS : 上传 / 下载
+@enduml
+```
+
+## 8. 状态机图 State Diagram
+
+**图意**：BookCopy 副本全生命周期 9 个状态：编目中→可借→预约保留/已借出→逾期→待上架→破损/遗失→剔除→终态。逾期进入时自动触发罚金计算。
+
+```plantuml
+@startuml 状态图-馆藏副本生命周期
+title 状态机图 · 馆藏副本 BookCopy 生命周期
+skinparam shadowing false
+
+[*] --> 编目中 : 采购验收登记
+编目中 --> 可借 : 贴条码 / 上架
+编目中 --> 剔除 : 验收不合格
+
+可借 --> 预约保留 : 读者预约并到书
+预约保留 --> 可借 : 保留超期（3 天未取）
+预约保留 --> 已借出 : 办理借阅
+
+可借 --> 已借出 : 办理借阅
+已借出 --> 逾期 : 超过应还日（自动）
+逾期 --> 可借 : 归还 + 缴清罚金
+
+已借出 --> 待上架 : 归还（完好）
+待上架 --> 可借 : 消毒上架
+待上架 --> 破损 : 验收发现损坏
+
+已借出 --> 破损 : 归还时验收损坏
+破损 --> 可借 : 修复完成
+破损 --> 剔除 : 不可修复
+
+已借出 --> 遗失 : 读者报失
+逾期 --> 遗失 : 逾期超 90 天核销
+遗失 --> 剔除 : 赔偿结算后注销
+
+可借 --> 剔除 : 下架注销
+剔除 --> [*]
+
+note right of 逾期
+  进入逾期即触发罚金计算，
+  罚金策略由 FineStrategy 决定
+end note
+@enduml
+```
+
+
+````
+
+
+## 9. 时间图 Timing Diagram
+
+**图意**：用 robust/concise 通道展示借阅 0~40 时间单位内三个对象的状态变迁：副本（可借→已借出→归还处理中→待上架→可借）、读者（空闲→借阅中→已逾期→归还办理→已结清→空闲）、罚金（未产生→计算中→待缴纳→已缴清）。
+
+```plantuml
+@startuml 时间图-副本与读者状态
+title 时间图 · 单册图书借阅—逾期—归还全过程
+scale 1.0
+
+robust "馆藏副本 BookCopy" as BC
+concise "读者 Reader" as RD
+robust "罚金 Fine" as FN
+
+@0
+BC is 可借
+RD is 空闲
+FN is 未产生
+
+@2
+BC is 已借出
+RD is 借阅中
+
+@31
+RD is 已逾期
+
+@34
+BC is 归还处理中
+RD is 归还办理
+FN is 计算中
+
+@36
+FN is 待缴纳
+
+@38
+BC is 待上架
+FN is 已缴清
+RD is 已结清
+
+@40
+BC is 可借
+RD is 空闲
+@enduml
+````

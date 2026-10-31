@@ -13,9 +13,9 @@
       <small data-page-node-id="peiQXa8JmZ8mHbcZJkSksb">智能体实战主线 · 信息资源管理专业</small></div>
     <nav data-page-node-id="htutauyvg8uCDdcbGeihjg">
       <a href="index.html" data-page-node-id="QNH7wYrxGnQ07x5PguqIQZ">门户</a>
-      <a href="ch03.html" data-page-node-id="qGm0nBO9MGwQF2cnH0UyZp">第3章</a>
+      <a href="ch03.html" data-page-node-id="qGm0nBO9MGwQF2cnH0UyZp">← 上一章</a>
       <a href="ch04.html" data-page-node-id="pONcvT6Su6O9pEOJf25SyT">第4章</a>
-      <a href="ch09.html" data-page-node-id="61OtAOLhWSo4zZP2G6EEvT">第9章</a>
+      <a href="ch05.html">下一章 →</a>
       <a href="../pages/appendix.html" data-page-node-id="ITR2UEk4D1gD7eYFpv1DNq">附录</a>
     </nav>
   </div>
@@ -67,8 +67,97 @@
       <h3 class="sec-h" id="theory" data-page-node-id="w1Pwi0nG0DCxxACjdeAcyN">理论基石 · 信息系统分析与设计</h3>
     <span class="mod mod-theory" data-page-node-id="T5PgyaHOrKewHq0Ttg0KjE">理论 · 结构化设计（SD）</span>
     <p data-page-node-id="Gh6DKpN2WaxuO5LC8NfmOq">① 模块独立性：耦合 Coupling 越低越好、内聚 Cohesion 越高越好；② 结构图 SC：表达模块调用关系与数据/控制标记传递；③ 变换/事务分析：由 DFD 映射为程序结构；④ IPO 图：输入—处理—输出描述模块内部逻辑。</p>
-    <span class="mod mod-theory" data-page-node-id="Zy1HeQevbbxVGhPDX7fHt5">理论 · 软件架构风格与模式</span>
-    <p data-page-node-id="wgE1Da6ShmMFr2PjD0Xpi6">分层架构（C/S、B/S、三层）；面向服务（SOA、微服务、事件驱动 EDA）；云原生（容器、Serverless）；智能体架构（感知—决策—行动 + 工具/记忆/规划）。</p>
+      <div class="callout method">
+        <span class="m-tag">案例拆解 · 图书馆借阅系统的结构化设计</span>
+        <p><b>先从业务说起：</b>读者在借阅页面输入读者证号和图书 ISBN，系统要判断能否借书；符合条件才登记借阅并更新馆藏状态。结构化设计不是先挑技术，而是把这项业务逐层拆成职责明确、接口清楚的模块。</p>
+        <div class="card">
+          <b>借阅处理（上层模块）</b>
+          <ul>
+            <li><b>受理请求：</b>接收读者证号、ISBN，检查必填项。</li>
+            <li><b>校验读者资格：</b>查询读者状态、欠费情况和当前借阅数量；合并成“是否有资格”的判断。</li>
+            <li><b>检查图书状态：</b>按 ISBN 查询馆藏，判断图书是否在馆且可借。</li>
+            <li><b>登记借阅：</b>资格和图书状态都通过后，创建借阅记录，并把馆藏状态更新为“借出”。</li>
+            <li><b>反馈结果：</b>返回成功信息和应还日期，或返回明确的失败原因。</li>
+          </ul>
+        </div>
+        <p><b>把它读成结构图：</b>“借阅处理”是父模块，下面各项是它调用的子模块；例如“校验读者资格”还可以拆成“查询读者、检查欠费、计算借阅数量”。父子关系表达谁调用谁，模块间传递读者证号、ISBN、资格判断和处理结果。只有校验通过才继续登记借阅，失败则转去反馈原因。</p>
+        <div class="two">
+          <div class="card"><b>高内聚：每个模块专心做一件事。</b><br>“检查图书状态”只负责查询并判断可借状态，不顺手生成提示文案、修改读者资料。以后规则变化，通常只需调整对应模块。</div>
+          <div class="card"><b>低耦合：模块通过少量、明确的数据协作。</b><br>“登记借阅”接收读者证号和 ISBN，返回借阅记录号、应还日期或失败结果；它不依赖页面控件，也不直接读取页面里的临时变量，因此更容易单独测试或替换。</div>
+        </div>
+        <div class="card">
+          <b>把“耦合”看具体：改一个地方，会牵动多少别的模块？</b>
+          <p>假设图书馆要调整“读者欠费时不能借书”的规则。低耦合的做法是由“校验读者资格”模块负责判断，并通过清楚的结果（例如“通过”或“欠费未结清”）告诉“借阅处理”模块。规则变了，主要修改资格校验模块；借阅页面和馆藏查询不必知道欠费规则的细节。</p>
+          <ul>
+            <li><b>内容耦合（最紧）：</b>一个模块直接进入或改写另一个模块的内部实现。例如“借阅页面”绕过馆藏服务，直接修改馆藏模块内部的“可借副本数”。内部结构一变，调用方就可能失效。应通过模块公开的接口请求借出，让馆藏模块自己维护状态。</li>
+            <li><b>公共耦合（很紧）：</b>多个模块读写同一份全局共享数据。例如借阅、续借和管理员页面都能直接改全局变量 <code>currentBookStatus</code>。数据变化来源难追踪，容易互相覆盖；应由一个模块拥有并维护数据，通过接口访问。</li>
+            <li><b>外部耦合（较紧）：</b>模块依赖外部规定的格式、设备或通信协议。例如借阅与校园卡系统都依赖固定的刷卡报文格式；格式变化时两边都要调整。可通过适配器隔离外部格式，让业务模块使用内部统一的数据结构。</li>
+            <li><b>控制耦合：</b>调用方传一个模式标记，如 <code>mode="borrow"</code> 或 <code>mode="renew"</code>，让同一个模块内部走不同分支。调用方必须了解被调用模块的控制方式。可把差异明显的操作拆成独立接口，并复用共同的资格校验。</li>
+            <li><b>标记耦合（又称特征耦合）：</b>把整个“读者档案”对象传给借阅模块，里面有姓名、地址、联系方式、欠费和借阅数等字段，但模块只需要证号与资格结果。档案结构变化可能波及多个调用方；可改为传专用、精简的数据结构。</li>
+            <li><b>数据耦合（较松，通常优先）：</b>只传完成任务必需的数据，例如向资格校验模块传读者证号，返回资格结果。接口小而明确，调用方不需要了解模块内部规则。</li>
+            <li><b>消息耦合（面向对象/服务场景常见，通常更松）：</b>模块只通过公开消息或操作请求协作，不共享内部数据。例如借阅流程发送“检查此读者资格”的请求，只获得约定的结果。双方依赖稳定的消息契约，而不是对方内部实现。</li>
+          </ul>
+          <p><b>经典结构化设计的耦合类型</b>通常从紧到松记为：内容 → 公共 → 外部 → 控制 → 标记 → 数据。消息耦合是面向对象和服务设计中常补充讨论的类型，不同教材对它与数据耦合的排序或分类略有差异。判断口诀：传递信息越多、对方内部细节知道得越多、共享状态越多，耦合通常越紧；要追求的不是“完全没有耦合”，而是通过稳定、最小化的接口进行必要协作。</p>
+        </div>
+        <div class="card">
+          <b>把“内聚”看具体：一个模块里的工作，是不是都为了同一个目标？</b>
+          <p>以“读者资格校验”为例。查询读者状态、检查欠费、计算当前借阅数量，虽然是几个步骤，但它们共同回答“这个读者现在是否符合借阅条件”，放在一个模块中是合理的高内聚；而在同一模块里再发送逾期提醒、统计全馆热门书、生成页面 HTML，就把不相干的职责混在一起了。</p>
+          <ul>
+            <li><b>偶然内聚（最弱）：</b>把无关工作随手放进“公共工具模块”，如格式化姓名、修改馆藏状态、发送通知。模块职责说不清，改动也难预测；应按业务职责拆开。</li>
+            <li><b>逻辑内聚：</b>把类别相同但具体目的不同的操作放在一起，由一个控制参数选择执行哪一种。例如“读者查询模块”用 <code>type</code> 区分查借阅记录、查欠费或查联系方式。若这些操作各自变化，可拆成独立功能。</li>
+            <li><b>时间内聚：</b>把同一时间发生、但业务目的不同的任务放在一起。例如“每日定时任务”同时计算逾期费用、生成统计报表、备份数据。可保留统一调度入口，但把具体工作委派给各自职责清晰的模块。</li>
+            <li><b>过程内聚：</b>模块中的步骤因必须按某个控制顺序执行而放在一起，但步骤未必围绕同一个数据或目标。例如“管理员登录后先记录操作日志，再显示首页菜单”。若步骤职责可分，可拆为可复用的登录、审计和页面模块。</li>
+            <li><b>通信内聚（又称通讯内聚）：</b>多个操作处理同一份数据或产生同一类输出。例如“读者档案处理”读取同一读者记录，完成显示资料、更新联系方式等操作。若操作目的不同，可继续拆分；不要只因它们碰巧访问同一数据库表就合并。</li>
+            <li><b>顺序内聚：</b>一个步骤的输出直接成为下一个步骤的输入。例如“读取借阅记录 → 计算逾期天数 → 计算应缴费用”。各步骤形成紧密的数据处理链。</li>
+            <li><b>功能内聚（最强）：</b>模块所有部分共同完成一个明确功能。例如“计算应还日期”读取借阅日期和借期规则，计算并返回应还日期；模块名称、输入和输出都能清楚表达这项功能。</li>
+          </ul>
+          <p><b>经典内聚类型</b>通常从弱到强记为：偶然 → 逻辑 → 时间 → 过程 → 通信 → 顺序 → 功能。面向对象设计还常讨论<b>信息内聚</b>：同一数据结构及其相关操作被封装在一个模块/类中，例如“馆藏副本”封装查询状态、借出、归还操作；这是一种以数据抽象和封装为核心的组织方式，不同教材未必把它列入上述经典序列。</p>
+          <p><b>自测一个模块：</b>能否用一句话说清它负责什么？模块中的大多数函数和数据是否都支持这项职责？如果改一条业务规则，是否能大致预判只需要改哪一处？答案越明确，内聚通常越高。</p>
+        </div>
+        <p><b>合起来看：</b>“读者资格校验”只负责给出资格结论（高内聚），向借阅流程传递精简、稳定的结果（低耦合）；借阅流程负责组织“校验—查馆藏—登记—反馈”，但不复制资格规则，也不直接改资格模块的内部数据。这样职责集中，协作边界也清楚。</p>
+        <p><b>用 IPO 看一个模块：</b>以“登记借阅”为例，输入是读者证号、ISBN 和当前时间；处理是写入借阅记录并更新馆藏状态；输出是借阅记录号、应还日期和处理结果。输入、处理、输出说的是模块内部做什么，结构图说的是模块之间如何分工与调用。</p>
+        <p><b>从 DFD 到模块：</b>DFD 描述业务中的数据如何流动；设计时可把“校验资格、检查馆藏、登记借阅”等处理映射为模块，把读者证号、ISBN、校验结果等数据流设计为模块接口。注意：DFD 不是调用顺序图，结构图也不是流程图；先依据业务规则确定调用关系和条件，再组织模块层次。</p>
+      </div>
+      <span class="mod mod-theory" data-page-node-id="Zy1HeQevbbxVGhPDX7fHt5">理论 · 软件架构风格与模式</span>
+      <p data-page-node-id="wgE1Da6ShmMFr2PjD0Xpi6">架构风格回答的是不同问题：SOA、微服务关注业务能力如何拆成服务；事件驱动 EDA 关注服务如何通过事件异步协作；容器和 Serverless 关注程序如何部署与运行；智能体架构关注智能体如何感知、规划、决策并行动。它们可以组合使用，不是互相排斥的选项。</p>
+      <div class="callout method">
+        <span class="m-tag">案例对照 · 图书馆系统的服务架构、云原生与智能体</span>
+        <p><b>场景：</b>图书馆需要提供借书、还书、预约、逾期提醒和馆藏统计。先把业务能力看清楚，再选择架构；不要为了“用微服务”而把每个功能都拆成独立服务。</p>
+        <div class="card">
+          <b>一、SOA：把共享业务能力做成服务</b>
+          <p>例如，学校已有统一身份认证、读者信息、收费和图书目录系统。图书馆系统通过标准服务接口调用“读者认证服务”“馆藏查询服务”“借阅服务”；服务总线或 API 网关可以承担路由、协议转换和统一治理。重点是让不同系统复用稳定的业务服务，适合多个异构系统需要整合的组织环境。代价是需要认真治理服务接口、版本、权限和集中式基础设施。</p>
+        </div>
+        <div class="card">
+          <b>二、微服务：按业务边界独立演进</b>
+          <p>随着访问量和团队扩大，可把“借阅”“馆藏”“读者”“通知”拆成边界清晰的服务。借阅服务负责借还规则和借阅记录，馆藏服务负责副本状态；它们通过 API 或事件协作，并各自负责自己的数据。这样借阅高峰时可以单独扩容借阅服务，通知服务故障也不必拖垮查询。关键是围绕业务边界拆分，而不是按数据库表或页面按钮拆分；分布式调用、数据一致性、监控和部署会增加复杂度，小系统未必需要微服务。</p>
+        </div>
+        <div class="card">
+          <b>三、事件驱动 EDA：用“发生了什么”通知其他模块</b>
+          <p>读者成功借书后，借阅服务发布“借阅已创建”事件；通知服务订阅它并发送到期提醒，统计服务订阅它并更新借阅量，馆藏服务据此更新副本状态。发布方不必逐个知道所有订阅方，新增统计或推荐消费者时也不必改动借阅主流程。事件通常异步处理，因此提醒和报表可能稍后更新；消费者要能处理重复投递，失败消息要可重试或人工排查。借阅资格判断和借阅记录创建仍应由明确的业务流程可靠完成，不能仅靠“发出事件”就认为交易已成功。</p>
+        </div>
+        <p><b>四、云原生部署：容器与 Serverless</b></p>
+        <div class="two">
+          <div class="card"><b>容器：把服务连同运行环境一起打包。</b><br>把借阅服务及其运行依赖构建成镜像，在多台服务器上运行多个一致的副本；平台可负责健康检查、故障重启和按负载扩缩容。容器解决“不同机器环境不一致”和“如何一致部署”的问题，本身不会自动让系统具备高可用，也仍需管理镜像、安全、网络和编排平台。</div>
+          <div class="card"><b>Serverless：按请求或事件运行代码。</b><br>“发送逾期提醒”可做成一个函数：收到“逾期任务”后运行，完成发送后退出，平台按调用量分配资源。适合触发不频繁、负载变化大的后台任务，减少服务器运维；但要考虑冷启动、执行时限、平台限制和费用波动。Serverless 不是没有服务器，而是服务器管理更多交给云平台。</div>
+        </div>
+        <div class="card">
+          <b>五、智能体架构：让系统能理解目标并选择行动</b>
+          <p>读者问“我想借一本关于数据分析的书，最好下周前能拿到”时，智能体可以这样工作：</p>
+          <ol>
+            <li><b>感知：</b>接收自然语言，识别主题“数据分析”、时间要求“下周前”和用户身份；必要时追问校区或纸本/电子版偏好。</li>
+            <li><b>规划：</b>把目标拆成“检索候选图书 → 查询馆藏与可借状态 → 按相关性和可获得时间排序 → 向读者展示选择”。多步骤任务才需要规划；简单查单本书可直接调用工具。</li>
+            <li><b>决策：</b>根据检索结果决定下一步：有可借书则展示；无可借副本则查询预约选项；信息不足则追问。大模型适合理解、排序和组织语言，借阅资格、库存和预约名额应以权威业务服务的实时结果为准。</li>
+            <li><b>行动：</b>通过受控工具调用馆藏检索、读者资格查询或预约服务。提交预约等会改变数据的操作前，应向读者确认；工具端还要校验身份、权限和业务规则。</li>
+            <li><b>记忆：</b>在当前对话中暂存已确认的校区和偏好，减少重复提问；跨会话保存偏好则需告知用户并允许管理或删除。不要把密码、证件号等敏感信息当作普通长期记忆。</li>
+          </ol>
+          <p>可以把它记成：<b>感知</b>“听懂要做什么”，<b>规划</b>“拆成哪些步骤”，<b>决策</b>“根据当前信息选哪条路”，<b>行动</b>“调用工具完成操作”；<b>记忆</b>为当前或后续步骤提供上下文。智能体不是直接替代借阅系统：关键数据读写仍由有权限校验和审计记录的业务服务执行。</p>
+        </div>
+        <div class="card">
+          <b>把几种风格组合起来看</b>
+          <p>图书馆可以用微服务承载借阅、馆藏和通知等业务能力；借阅服务通过 EDA 发布借阅事件；服务以容器运行，偶发提醒任务用 Serverless 处理；读者入口再由智能体理解自然语言并调用这些受控服务。若学校已经有许多旧系统，也可以先以 SOA/API 整合，不必一次性全部微服务化。</p>
+          <p><b>选择提示：</b>系统小、团队少，先用清晰的模块化单体通常更简单；跨系统复用能力时考虑 SOA；服务需要独立扩容、部署和由团队独立负责时再考虑微服务；业务需要异步通知或解耦消费者时采用 EDA；部署环境和弹性需求决定容器或 Serverless；只有在自然语言交互、多步骤任务或动态工具选择有实际价值时才引入智能体。</p>
+        </div>
+      </div>
     <span class="mod mod-theory" data-page-node-id="fdfL6SPdUscN41Yl1dEnTs">理论 · 面向对象设计（OOD）</span>
     <p data-page-node-id="D2oBEGbGrJnlmE91ZBqwuQ">类图（类、属性、操作及关联/聚合/继承）；交互图（时序图）；状态图（生命周期）；设计原则 SOLID（单一职责、开闭、依赖倒置等）。</p>
     <span class="mod mod-theory" data-page-node-id="2GpjTx6AkcGGjeBJPlZS0s">理论 ↔ 智能体能力 映射</span>
@@ -270,14 +359,14 @@
 </figure>
     </div>
 
-      <h3 class="sec-h" id="s42" data-page-node-id="kgVlqcUaYojBu1fZp1wOdk">4.2　智能体架构组成（Coze）</h3>
-    <p data-page-node-id="GoAOKd4XAZnd4f4gt3hioG">一个 Coze 智能体由三块有机组成：</p>
+      <h3 class="sec-h" id="s42" data-page-node-id="kgVlqcUaYojBu1fZp1wOdk">4.2　智能体架构组成</h3>
+    <p data-page-node-id="GoAOKd4XAZnd4f4gt3hioG">不同平台的界面和命名各异，但智能体通常由三类职责组成：</p>
     <ul data-page-node-id="XeVylNTMv9CqPJLxtsmsld">
       <li data-page-node-id="ANsP8qHXgxGE5s3m2XUj5i"><b data-page-node-id="bzYtdk5SUGuJulhNqn34Xp">人设与回复逻辑</b>：定义角色、技能与回复规则（=需求规格），是智能体"大脑"。</li>
-      <li data-page-node-id="GhjE9Kk8SbwT2UfCMVWNKw"><b data-page-node-id="pPfoHIQe3tYo5gogIM0B6w">技能区四件套</b>：插件（调外部 API）/ 工作流（编排多步）/ 知识库（注入领域知识）/ 卡片（富媒体呈现）。</li>
+      <li data-page-node-id="GhjE9Kk8SbwT2UfCMVWNKw"><b data-page-node-id="pPfoHIQe3tYo5gogIM0B6w">工具与知识接口</b>：按产品能力选用连接器 / API / MCP、工作流、知识库或富媒体组件；并非每个平台都提供全部组件。</li>
       <li data-page-node-id="AkU8DsVZuLherdcnSFr3D4"><b data-page-node-id="57X3z3DNxN87ff8k2y7own">记忆区三类</b>：变量（记昵称/进度）/ 数据库（结构化业务数据）/ 记忆库（自动沉淀用户画像）。</li>
     </ul>
-    <p data-page-node-id="Ss4hHVjicQCY5Nv5JAj0hY">编排画布用可视化拖曳节点、连线定义数据流向，支持实时调试与运行日志追踪。</p>
+    <p data-page-node-id="Ss4hHVjicQCY5Nv5JAj0hY">可视化编排工具可用节点与连线定义数据流向；代码框架则通过模块、接口和配置实现同类职责。调试时均应关注输入输出、错误处理与运行日志。</p>
 
     
     <div class="pptgrid" data-cnt="9" data-page-node-id="vDxfJSkUk1TTJF8Cqn5SzK">
@@ -744,7 +833,7 @@
   <ul data-page-node-id="Fk8Y4HFAp8BsM5tJxjHkNB">
     <li data-page-node-id="92Pa26HERDyc0bE27Ss3sC"><b data-page-node-id="nRk25jGhWb1ASbxzo3ONdB">场景：</b>把‘查政策 / 答疑问 / 约咨询’拆成三个子智能体，由一个调度智能体按意图路由——改一个不影响另外两个，正是高内聚低耦合。</li>
     <li data-page-node-id="n8T6OfEKBD6GzoaxcGEKJf"><b data-page-node-id="bA5AUH5TDBnP8MvHZ2CQjE">防御性：</b>总体设计阶段就标注‘如果用户问隐私怎么办’：给拒答边界与转人工节点，设计即伦理。</li>
-    <li data-page-node-id="uj2HqGEKnWNu6kZXwMrT5J"><b data-page-node-id="PlPANzlEBKYsAFlvVTOn4v">映射：</b>本章‘模块 + 接口’思想，对应 Coze 的‘主工作流 + 子工作流/插件’组件划分。</li>
+    <li data-page-node-id="uj2HqGEKnWNu6kZXwMrT5J"><b data-page-node-id="PlPANzlEBKYsAFlvVTOn4v">映射：</b>本章‘模块 + 接口’思想，可映射到各平台的主流程/子流程、工具或技能；也可用 MCP、函数调用或自定义代码实现接口。</li>
   </ul>
 </div>
 
@@ -802,9 +891,9 @@
     <div class="labtask" data-page-node-id="gbWj0f6yLIIqjMNgbJGSo6">
       <h3 data-page-node-id="qtKr64kqZhfLZ4Z2hNGt0l">📋 实验任务书</h3>
       <p data-page-node-id="QMWFsIr8LxRevlx5lfjk3X"><b data-page-node-id="xeKsX6fk2PL0ci7yRVC5t3">目标：</b>基于需求产出可追溯的智能体总体架构图与失效点分析。</p>
-      <p data-page-node-id="hlbq2u5DS3NebbJ8vkwdnK"><b data-page-node-id="mwWwSMt7pZie8FTBoqgq84">环境：</b>扣子 Coze + 绘图工具（纸笔/在线画图均可）。</p>
-      <p data-page-node-id="O8GzEZbSNYruC9ujLMNyfd"><b data-page-node-id="CBNtjXmY3GQNQ66zkEMkgr">步骤：</b>① 画架构图（人设/技能/记忆）；② 标注需求对应；③ 用 KB 防御性设计提示词做失效点分析（3 点 + 恢复机制）；④ 在 Coze 搭建骨架占位。</p>
-      <p data-page-node-id="3XTrWb20msUqzWp5JPm2mx"><b data-page-node-id="YPWDXgOjG2OGyqPivK4coN">交付物：</b>总体架构图 + 失效点分析清单 + Coze 架构骨架截图。</p>
+      <p data-page-node-id="hlbq2u5DS3NebbJ8vkwdnK"><b data-page-node-id="mwWwSMt7pZie8FTBoqgq84">环境：</b>任一可用智能体平台或框架 + 绘图工具（纸笔/在线画图均可）。</p>
+      <p data-page-node-id="O8GzEZbSNYruC9ujLMNyfd"><b data-page-node-id="CBNtjXmY3GQNQ66zkEMkgr">步骤：</b>① 画架构图（人设/技能/记忆）；② 标注需求对应；③ 用 KB 防御性设计提示词做失效点分析（3 点 + 恢复机制）；④ 在选用工具中搭建可演示的骨架或接口原型。</p>
+      <p data-page-node-id="3XTrWb20msUqzWp5JPm2mx"><b data-page-node-id="YPWDXgOjG2OGyqPivK4coN">交付物：</b>总体架构图 + 失效点分析清单 + 原型界面或关键配置截图。</p>
       <p data-page-node-id="KAM114m0kyPDqKyBNxigyf"><b data-page-node-id="y94JiZiW1SS7vv1cwAP6wJ">评分点：</b>架构完整(30%) · 需求可追溯(25%) · 防御性分析(30%) · 骨架搭建(15%)。</p>
     </div>
     <h3 class="sec-h" id="labexp">🛠 分步操作 · 为项目设计智能体总体架构</h3>
@@ -813,7 +902,7 @@
       <li data-page-node-id="p8BoqJ7Zi1FUcHGQbNSDLk">基于第 3 章需求，绘制智能体架构图：人设/回复逻辑 + 技能（插件/工作流/知识库）+ 记忆。</li>
       <li data-page-node-id="wUg83FE5Ib4YGGF6A0guA9">标注每个组件对应的需求条目，体现"需求→架构"可追溯。</li>
       <li data-page-node-id="O9NgMPajoScSVFM5mbPQHp">用 KB《软件防御性设计专家提示词》做一次失效点分析：列 3 个故障点与恢复机制。</li>
-      <li data-page-node-id="Fm6hMDxjf2VhLEV8YTqjq0">在 Coze 中按架构搭建骨架：创建智能体、添加对应技能占位。</li>
+      <li data-page-node-id="Fm6hMDxjf2VhLEV8YTqjq0">在所选工具中按架构搭建骨架：创建智能体、配置对应工具/技能占位，或画出待实现接口。</li>
     </ol>
     <details class="fold" data-page-node-id="OcazxOHdeyGGuWTWQ1phDA">
       <summary data-page-node-id="urPtK6t5NBHspPnFaVCwTh">📝 架构图自检清单</summary>
