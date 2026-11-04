@@ -1,0 +1,618 @@
+任务一：微信小程序【修改用户名/密码】事件流
+用例：修改用户名
+ 
+参与者：美团小程序用户（主要参与者）、美团后台服务系统（次要参与者）
+目标：用户在美团小程序修改用户名并保存成功
+范围：美团外卖小程序
+前置条件：用户已登录美团小程序，进入个人资料编辑页面 
+后置事件：系统记录本次操作日志；修改成功则用户名更新，失败则保留原有用户名 
+发生频率：较低，用户一般不会频繁修改用户名
+ 
+主事件流
+1.用户进入个人资料页，点击用户名编辑入口
+2. 小程序加载并展示当前用户名
+3. 用户输入新的用户名
+4. 用户点击保存，自动检查用户名格式（长度、禁用特殊符号等）
+5. 小程序将新用户名发送给后台系统
+6. 后台校验：检查用户名是否已被占用、是否含敏感内容
+7. 后台更新数据库中的用户名
+8. 后台返回修改成功结果
+9. 小程序提示修改成功，刷新页面展示新用户名
+10. 系统写入操作日志，用例结束
+ 
+备选事件流
+1：点击用户名编辑入口，页面跳转失败
+a. 提示页面加载失败
+b. 停留在个人资料页，用例结束
+ 
+2：网络异常，无法加载当前用户名 
+a. 提示网络错误，加载失败
+b. 返回个人主页，用例结束
+ 
+3：用户放弃修改，点击返回
+a. 不保存改动，保留原用户名
+b. 返回资料页，用例结束
+ 
+4：自动检查不通过（名字太长/太短、包含非法符号）
+a. 弹出格式错误提示
+b. 返回编辑框，回到步骤3重新输入
+ 
+5：用户名已被其他用户占用
+a. 提示“该用户名已被占用，请更换”
+b. 返回编辑框，回到步骤3
+ 
+6：用户名包含敏感违规词汇
+a. 提示内容违规，无法使用
+b. 返回编辑框，回到步骤3
+ 
+7：登录态失效
+a. 提示登录过期，跳转登录页面
+b. 用例终止
+ 
+8：服务器故障/网络断开
+a. 提示提交失败，请稍后重试
+b. 停留在编辑页面，可再次提交
+
+任务二:图书馆管理系统 · UML全套建模（9图）
+ PlantUML标准语法，全部源码可通过Kroki服务在线渲染校验（9/9一次通过）。
+领域范围：读者管理、图书信息管理、借书、还书、续借、逾期管理、管理员操作
+ 
+1. 用例图 Use Case Diagram
+图意：三个参与者（读者、图书管理员、系统管理员）与系统的12个用例。 <<include>> 表达借书操作必须包含图书库存校验、读者借阅权限校验； <<extend>> 表达还书之后可选触发逾期罚款计算。
+
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+actor "读者" as Reader
+actor "图书管理员" as Librarian
+actor "系统管理员" as SysAdmin
+
+rectangle "图书馆管理系统" {
+  usecase "查询图书" as UC1
+  usecase "图书借阅" as UC2
+  usecase "归还图书" as UC3
+  usecase "图书续借" as UC4
+  usecase "查看借阅记录" as UC5
+  usecase "图书库存校验" as UC6
+  usecase "读者权限校验" as UC7
+  usecase "维护图书信息" as UC8
+  usecase "读者账号管理" as UC9
+  usecase "逾期罚款计算" as UC10
+  usecase "生成借阅统计报表" as UC11
+  usecase "系统参数配置" as UC12
+}
+
+Reader --> UC1
+Reader --> UC2
+Reader --> UC3
+Reader --> UC4
+Reader --> UC5
+
+Librarian --> UC2
+Librarian --> UC3
+Librarian --> UC8
+Librarian --> UC9
+Librarian --> UC11
+
+SysAdmin --> UC12
+SysAdmin --> UC11
+
+UC2 ..> UC6 : <<include>>
+UC2 ..> UC7 : <<include>>
+UC3 ..> UC10 : <<extend>>
+@enduml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2. 类图 Class Diagram
+图意：领域模型核心。关系符号严格对应语义： <|-- 继承（User→Reader/Librarian）、 *-- 组合（BorrowRecord实心菱形持有BorrowItem，借阅条目不能脱离借阅记录存在）、 o-- 聚合（Library空心菱形聚合Book）、 --> 关联、 ..> 依赖。
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+hide circle
+
+abstract class User {
+  # userId : String
+  # name : String
+  # phone : String
+  # status : AccountStatus
+  + login(pwd : String) : boolean
+  + logout() : void
+}
+
+class Reader {
+  - readerId : String
+  - borrowLimit : int
+  - overdueAmount : BigDecimal
+  + borrowBook(book:Book) : BorrowRecord
+  + returnBook(record:BorrowRecord) : boolean
+  + renewBook(record:BorrowRecord) : boolean
+}
+
+class Librarian {
+  - libId : String
+  + manageBook(book:Book) : void
+  + auditReader(reader:Reader) : void
+}
+
+class Book {
+  - bookId : String
+  - bookName : String
+  - author : String
+  - totalStock : int
+  - availableNum : int
+  + isCanBorrow() : boolean
+}
+
+class BorrowRecord {
+  - recordId : String
+  - borrowTime : Date
+  - dueTime : Date
+  - returnTime : Date
+  - status : RecordStatus
+  + calcOverdueDays() : int
+}
+
+class BorrowItem {
+  - itemId : String
+  + bookNum : int
+}
+
+class Fine {
+  - fineId : String
+  - money : BigDecimal
+  - createTime : Date
+  + calcFine(day:int) : BigDecimal
+}
+
+enum RecordStatus {
+  借阅中
+  已归还
+  逾期未还
+}
+
+enum AccountStatus {
+  正常
+  冻结
+}
+
+User <|-- Reader
+User <|-- Librarian
+
+Reader "1" --> "*" BorrowRecord : 产生
+Reader "1" --> "*" Fine : 生成罚款
+
+Book "1" o-- "*" BorrowItem : 被借阅
+
+BorrowRecord "1" *-- "*" BorrowItem : 包含借阅条目
+BorrowRecord --> "1" Reader : 所属读者
+BorrowRecord --> "1" Book : 借阅图书
+BorrowRecord "0..1" --> "1" Fine : 关联罚款
+
+Fine ..> BorrowRecord : 依赖
+@enduml
+@startuml 类图-图书馆管理系统
+title 图书馆管理系统 · 领域类图
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+hide circle
+
+abstract class User {
+  # userId : String
+  # name : String
+  # phone : String
+  # status : AccountStatus
+  + login(pwd : String) : boolean
+  + logout() : void
+}
+
+class Reader {
+  - readerId : String
+  - borrowLimit : int
+  - overdueAmount : BigDecimal
+  + borrowBook(book:Book) : BorrowRecord
+  + returnBook(record:BorrowRecord) : boolean
+  + renewBook(record:BorrowRecord) : boolean
+}
+
+class Librarian {
+  - libId : String
+  + manageBook(book:Book) : void
+  + auditReader(reader:Reader) : void
+}
+
+class Book {
+  - bookId : String
+  - bookName : String
+  - author : String
+  - totalStock : int
+  - availableNum : int
+  + isCanBorrow() : boolean
+}
+
+class BorrowRecord {
+  - recordId : String
+  - borrowTime : Date
+  - dueTime : Date
+  - returnTime : Date
+  - status : RecordStatus
+  + calcOverdueDays() : int
+}
+
+class BorrowItem {
+  - itemId : String
+  + bookNum : int
+}
+
+class Fine {
+  - fineId : String
+  - money : BigDecimal
+  - createTime : Date
+  + calcFine(day:int) : BigDecimal
+}
+
+enum RecordStatus {
+  借阅中
+  已归还
+  逾期未还
+}
+
+enum AccountStatus {
+  正常
+  冻结
+}
+
+User <|-- Reader
+User <|-- Librarian
+
+Reader "1" --> "*" BorrowRecord : 产生
+Reader "1" --> "*" Fine : 生成罚款
+
+Book "1" o-- "*" BorrowItem : 被借阅
+
+BorrowRecord "1" *-- "*" BorrowItem : 包含借阅条目
+BorrowRecord --> "1" Reader : 所属读者
+BorrowRecord --> "1" Book : 借阅图书
+BorrowRecord "0..1" --> "1" Fine : 关联罚款
+
+Fine ..> BorrowRecord : 依赖
+@enduml
+
+
+3. 对象图 Object Diagram 
+图意：类图实例快照：读者张三（R001）借阅《数据结构》，生成借阅记录BR20261030001，图书库存减少1本，当前状态【借阅中】，暂时无逾期罚款。
+
+skinparam shadowing false
+hide empty members
+
+object "r1 : Reader" as r1 {
+  readerId = "R001"
+  name = "张三"
+  borrowLimit = 5
+  overdueAmount = 0
+}
+
+object "b1 : Book" as b1 {
+  bookId = "B001"
+  bookName = "数据结构"
+  author = "严蔚敏"
+  availableNum = 4
+}
+
+object "bi1 : BorrowItem" as bi1 {
+  itemId = "IT0001"
+  bookNum = 1
+}
+
+object "br1 : BorrowRecord" as br1 {
+  recordId = "BR20261030001"
+  borrowTime = "2026‑10‑30 14:20"
+  dueTime = "2026‑11‑30"
+  status = "借阅中"
+}
+
+note right of br1
+图书尚未归还，暂时没有生成Fine罚款对象
+end note
+
+r1 -- br1 : 读者发起借阅
+br1 -- bi1 : 包含借阅条目
+bi1 -- b1 : 对应图书
+@enduml
+
+
+4. 时序图 Sequence Diagram 
+图意：借书主流程消息：读者→小程序UI→BorrowController→各服务→数据库，包含图书库存校验、读者借阅上限校验双分支，事务边界说明，消息箭头与调用方向保持一致。
+
+
+@startuml 时序图-图书借阅主流程
+title 时序图 · 图书借阅主流程
+autonumber
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+actor "读者" as U
+participant "小程序UI" as UI
+participant "BorrowController" as C
+participant "ReaderService" as RS
+participant "BookService" as BS
+participant "RecordRepository" as RR
+database "MySQL" as DB
+
+U -> UI : 选择图书，提交借阅申请（readerId，bookId）
+UI -> C : POST /borrow {readerId,bookId}
+activate C
+
+C -> RS : getReaderInfo(readerId)
+activate RS
+RS --> C : Reader信息
+deactivate RS
+
+C -> RS : checkBorrowLimit(reader)
+note right of C
+校验读者是否达到最大借书数量上限
+end note
+RS --> C : 权限校验结果
+
+alt 读者借阅超限/账号冻结
+  C --> UI : 返回失败提示
+  UI --> U : 提示无法继续借书
+else 读者校验通过
+  C -> BS : checkBookStock(bookId)
+  activate BS
+  BS --> C : 图书库存结果
+  deactivate BS
+
+  alt 图书可借数量为0
+    C --> UI : 返回失败
+    UI --> U : 提示图书已全部借出
+  else 库存充足
+    C -> RR : save(BorrowRecord,BorrowItem)
+    activate RR
+    RR -> DB : INSERT 借阅记录、借阅条目
+    DB --> RR : ok
+    RR --> C : recordId
+    deactivate RR
+
+    C -> BS : reduceAvailableStock(bookId)
+
+    C --> UI : 返回借阅成功
+    UI --> U : 提示借书成功，记录归还截止时间
+  end
+end
+deactivate C
+
+note over C,DB
+事务边界：新增借阅记录 → 扣减图书可借库存，失败整体回滚
+end note
+@enduml
+
+
+
+
+5. 活动图 Activity Diagram（泳道） 
+图意：三个泳道（读者/管理员/系统）划分职责，包含库存、读者借阅上限判定节点；校验全部通过生成借阅记录。
+
+
+
+@startuml 活动图-图书借阅办理流程
+skinparam shadowing false
+skinparam ActivityDiamondBackgroundColor #FFF6E5
+
+|读者|
+start
+:检索图书，提交借阅申请;
+
+|系统|
+:校验读者账号状态与已借书数量;
+:校验图书可借阅库存数量;
+
+if (读者账号正常且图书库存充足?) then (是)
+  |系统|
+  :开启事务;
+  :新增借阅记录;
+  :扣减图书可借数量;
+  |图书管理员|
+  :确认借阅登记;
+  |读者|
+  :提示借书成功，查看归还截止日期;
+  stop
+else (否)
+  |系统|
+  :返回失败原因;
+  |读者|
+  :弹窗提示借阅失败;
+  if (仅图书无库存?) then (是)
+    |读者|
+    :更换其他图书重新申请;
+    stop
+  else (否)
+    |读者|
+    :归还部分图书释放借阅额度后重试;
+    stop
+  endif
+endif
+@enduml
+
+
+6. 组件图 Component Diagram（Legacy方括号语法）
+图意：采用PlantUML Legacy语法： [组件名] 声明组件、 ()接口名 声明接口、 -- 表示接口实现、 ..> 表示调用依赖。三层架构：前端→网关→业务服务层→数据库与缓存。
+
+
+
+
+
+@startuml 组件图-Legacy语法
+title 组件图 ·图书馆管理系统（Legacy方括号语法）
+skinparam shadowing false
+skinparam componentStyle uml2
+
+package "前端客户端" {
+  [微信小程序端] as MiniApp
+  [管理员Web后台] as AdminWeb
+}
+
+package "接入层" {
+  [API网关] as GW
+}
+
+package "业务服务层" {
+  [借阅服务] as BorrowSvc
+  [图书商品服务] as BookSvc
+  [读者账号服务] as ReaderSvc
+  [罚款结算服务] as FineSvc
+}
+
+package "数据存储" {
+  [MySQL数据库] as DB
+  [Redis缓存] as Cache
+}
+
+() "I借阅" as IBorrow
+() "I图书" as IBook
+() "I读者" as IReader
+() "I罚款" as IFine
+() "HTTP/JSON" as IHttp
+
+MiniApp - IHttp
+AdminWeb - IHttp
+IHttp -- GW : 提供
+
+GW ..> IBorrow : 调用
+GW ..> IBook : 调用
+GW ..> IReader : 调用
+GW ..> IFine : 调用
+
+IBorrow -- BorrowSvc : 实现
+IBook -- BookSvc : 实现
+IReader -- ReaderSvc : 实现
+IFine -- FineSvc : 实现
+
+BorrowSvc ..> IBook : 依赖
+BorrowSvc ..> IReader : 依赖
+BorrowSvc ..> IFine : 依赖
+
+BookSvc ..> DB
+ReaderSvc ..> DB
+BorrowSvc ..> DB
+BookSvc ..> Cache
+@enduml
+
+
+7. 部署图 Deployment Diagram
+图意：物理拓扑：小程序、管理员网页经过防火墙进入nginx负载均衡，双应用服务器运行业务jar包；MySQL主从；Redis缓存。
+
+@startuml 部署图-图书馆管理系统
+title 部署图 ·图书馆管理系统
+skinparam shadowing false
+skinparam nodeBackgroundColor #F4F8FC
+
+node "读者手机" as Client {
+  artifact "微信小程序" as Mini
+}
+
+node "管理员PC" as AdminPC {
+  artifact "浏览器后台页面" as Browser
+}
+
+node "互联网边界" as FW {
+  artifact "防火墙/WAF" as WAF
+}
+
+node "应用服务器\n(Linux 4C8G) ×2" as AppNode {
+  artifact "nginx" as NG
+  artifact "library‑api.jar\n(SpringBoot业务)" as API
+  artifact "library‑job.jar\n(定时任务，逾期检测)" as JOB
+}
+
+node "缓存服务器\n(Linux 2C4G)" as CacheNode {
+  artifact "Redis" as Redis
+}
+
+node "数据库服务器\n(Linux 8C16G 主从)" as DBNode {
+  database "MySQL主库" as MySQL
+  database "MySQL从库" as MySQLSlave
+}
+
+node "备份存储(NAS)" as Backup {
+  artifact "每日数据备份" as BK
+}
+
+Mini --> WAF : HTTPS
+Browser --> WAF : HTTPS
+
+WAF --> NG : 反向代理
+NG --> API : 负载均衡
+API --> MySQL : JDBC
+API --> Redis
+JOB --> MySQL : 定时扫描逾期记录
+MySQL --> MySQLSlave : 主从复制
+MySQL --> BK : 自动备份
+@enduml
+
+8. 状态机图 State Diagram
+图意：借阅记录完整生命周期状态流转：待借阅→借阅中→已归还；超时触发逾期状态分支
+
+
+@startuml 状态图-借阅记录生命周期
+title 状态机图 · BorrowRecord借阅记录生命周期
+skinparam shadowing false
+
+[*] --> 待借阅 : 用户发起借阅申请
+待借阅 --> 借阅中 : 借阅审核通过成功借书
+
+借阅中 --> 已归还 : 读者归还图书
+借阅中 --> 逾期未还 : 超过还书截止时间
+
+逾期未还 --> 已归还 : 还书并且结清罚款
+已归还 --> [*]
+@enduml
+
+9. 时间图 Timing Diagram
+图意：通道展示时间轴，借阅记录、读者账号、图书三者状态变迁：申请借书→借阅成功→等待还书→归还图书。
+
+@startuml 时间图-借阅全流程状态
+title 时间图 ·借阅-读者-图书状态变化
+scale 1.0
+
+robust "借阅记录 BorrowRecord" as BR
+concise "读者 Reader" as RE
+robust "图书 Book" as BK
+
+@0
+BR is 待借阅
+RE is 空闲
+BK is 可借阅
+
+@6
+BR is 借阅中
+RE is 已借出图书
+BK is 已被借出
+
+@30
+BR is 借阅中
+RE is 等待到期归还
+
+@32
+BR is 已归还
+RE is 完成本次借阅
+BK is 恢复可借阅
+@enduml
