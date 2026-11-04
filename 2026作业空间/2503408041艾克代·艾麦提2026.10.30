@@ -1,0 +1,619 @@
+蜜雪冰城小程序全套建模
+
+领域范围：用户个人信息管理、商品浏览、点单结算、订单履约、会员营销、门店管理。
+参与者：蜜雪冰城小程序用户（主要参与者）、蜜雪冰城后台服务系统（次要参与者）
+目标：用户在蜜雪冰城小程序修改用户名并保存成功
+范围：蜜雪冰城点单小程序
+前置条件：用户已登录蜜雪冰城小程序，进入个人资料编辑页面
+后置事件：系统记录本次操作日志；修改成功则用户名更新，失败则保留原有用户名
+发生频率：较低，用户一般不会频繁修改用户名
+
+主事件流
+1. 用户进入个人中心，点击个人资料进入编辑页，点击用户名编辑入口
+2. 小程序加载并展示当前用户名
+3. 用户输入新的用户名
+4. 用户点击保存，前端自动检查用户名格式（长度、禁用特殊符号等）
+5. 小程序将新用户名发送给后台用户服务系统
+6. 后台校验：检查用户名是否已被占用、是否含敏感违规内容
+7. 后台更新数据库中的用户昵称
+8. 后台返回修改成功结果
+9. 小程序提示修改成功，刷新页面展示新用户名
+10. 系统写入操作日志，用例结束
+备选事件流
+1a：点击用户名编辑入口，页面跳转失败
+1. 提示页面加载失败，请稍后重试
+2. 停留在个人资料页，用例结束
+2a：网络异常，无法加载当前用户名
+1. 提示网络错误，加载失败
+2. 返回个人中心页，用例结束
+3a：用户放弃修改，点击返回
+1. 不保存改动，保留原用户名
+2. 返回资料页，用例结束
+4a：前端格式校验不通过（名字太长 / 太短、包含非法符号）
+1. 弹出格式错误提示，说明昵称合规要求
+2. 返回编辑框，回到步骤 3 重新输入
+6a：用户名已被其他用户占用
+1. 提示 “该用户名已被占用，请更换”
+2. 返回编辑框，回到步骤 3
+6b：用户名包含敏感违规词汇
+1. 提示昵称包含违规内容，无法使用
+2. 返回编辑框，回到步骤 3
+6c：登录态失效
+1. 提示登录过期，请重新登录，跳转登录页面
+2. 用例终止
+6d：服务器故障 / 网络断开
+1. 提示提交失败，请稍后重试
+2. 停留在编辑页面，可再次提交
+
+1. 用例图 Use Case Diagram
+图意：四个参与者（顾客、门店店员、运营管理员、系统管理员）与系统的 14 个核心用例。<<include>> 表达下单必经的库存校验与金额计算，<<extend>> 表达订单流程中可触发的退款申请（可选分支）。
+
+@startuml 用例图-蜜雪冰城小程序
+title 蜜雪冰城小程序 · 用例图
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+actor "顾客" as Customer
+actor "门店店员" as Staff
+actor "运营管理员" as Operator
+actor "系统管理员" as Admin
+
+rectangle "蜜雪冰城小程序系统" {
+  usecase "浏览商品" as UC1
+  usecase "提交订单" as UC2
+  usecase "订单支付" as UC3
+  usecase "查看订单" as UC4
+  usecase "申请退款" as UC5
+  usecase "修改个人信息" as UC6
+  usecase "使用优惠券" as UC7
+  usecase "查询门店" as UC8
+  usecase "校验商品库存" as UC9
+  usecase "计算订单金额" as UC10
+  usecase "核销取餐码" as UC11
+  usecase "商品上下架" as UC12
+  usecase "营销活动配置" as UC13
+  usecase "系统参数配置" as UC14
+}
+
+Customer --> UC1
+Customer --> UC2
+Customer --> UC3
+Customer --> UC4
+Customer --> UC5
+Customer --> UC6
+Customer --> UC7
+Customer --> UC8
+
+Staff --> UC11
+Staff --> UC12
+
+Operator --> UC13
+Admin --> UC14
+
+UC2 ..> UC9 : <<include>>
+UC2 ..> UC10 : <<include>>
+UC3 ..> UC7 : <<include>>
+UC4 ..> UC5 : <<extend>>
+@enduml
+
+
+2. 类图 Class Diagram
+图意：领域模型核心。关系符号严格对应语义：<|-- 继承（User→Customer/Staff/Admin）、*-- 组合（Product 实心菱形持有 ProductSku，规格不能脱离商品存在）、o-- 聚合（Product 空心菱形聚合 Category）、--> 关联、..> 依赖、..|>/<|.. 接口实现（Searchable、DiscountStrategy 策略模式）。
+@startuml 类图-蜜雪冰城小程序
+title 蜜雪冰城小程序 · 领域类图
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+hide circle
+
+abstract class User {
+  # userId : String
+  # nickname : String
+  # phone : String
+  # status : AccountStatus
+  + login(code : String) : boolean
+  + logout() : void
+}
+
+class Customer {
+  - memberId : String
+  - points : int
+  - memberLevel : int
+  + placeOrder(items : List<OrderItem>) : Order
+  + pay(order : Order) : Payment
+  + applyRefund(order : Order) : Refund
+}
+
+class Staff {
+  - staffId : String
+  - storeId : String
+  + verifyOrder(code : String) : Order
+  + onShelf(sku : ProductSku) : void
+  + offShelf(sku : ProductSku) : void
+}
+
+class Admin {
+  - role : String
+  + configParam(key : String, value : String) : void
+  + viewDataReport() : Report
+}
+
+class Product {
+  - productId : String
+  - name : String
+  - description : String
+  - categoryId : String
+  + isOnSale() : boolean
+}
+
+class ProductSku {
+  - skuId : String
+  - spec : String
+  - price : BigDecimal
+  - stock : int
+  - status : SkuStatus
+  + isAvailable() : boolean
+}
+
+class Category {
+  - catId : String
+  - name : String
+  - parentId : String
+  - sort : int
+}
+
+class Store {
+  - storeId : String
+  - name : String
+  - address : String
+  - businessHours : String
+  + isOpen() : boolean
+}
+
+class Order {
+  - orderId : String
+  - createTime : Date
+  - totalAmount : BigDecimal
+  - payAmount : BigDecimal
+  - status : OrderStatus
+  + isPaid() : boolean
+  + cancel() : boolean
+}
+
+class OrderItem {
+  - itemId : String
+  - skuId : String
+  - quantity : int
+  - unitPrice : BigDecimal
+}
+
+class Payment {
+  - payId : String
+  - payTime : Date
+  - amount : BigDecimal
+  - payChannel : String
+  - status : PayStatus
+  + isSuccess() : boolean
+}
+
+class Coupon {
+  - couponId : String
+  - name : String
+  - discount : BigDecimal
+  - threshold : BigDecimal
+  - expireTime : Date
+  + isUsable(amount : BigDecimal) : boolean
+}
+
+interface Searchable {
+  + search(keyword : String) : List<Product>
+}
+
+interface DiscountStrategy {
+  + calculate(amount : BigDecimal, coupon : Coupon) : BigDecimal
+}
+
+class FullReductionStrategy
+class CouponStrategy
+
+enum OrderStatus {
+  待支付
+  已支付
+  制作中
+  待取餐
+  已完成
+  已取消
+  已退款
+}
+
+enum SkuStatus {
+  上架
+  下架
+  售罄
+}
+
+enum PayStatus {
+  未支付
+  支付中
+  支付成功
+  支付失败
+}
+
+User <|-- Customer
+User <|-- Staff
+User <|-- Admin
+
+Customer "1" --> "*" Order : 发起
+Customer "1" --> "*" Coupon : 持有
+Order "1" *-- "1..*" OrderItem : 包含
+Order "1" --> "0..1" Payment : 对应
+Order --> OrderStatus
+Payment --> PayStatus
+
+Product "1" *-- "1..*" ProductSku : 含规格
+Product o-- "1" Category : 所属分类
+ProductSku --> SkuStatus
+OrderItem "1" --> "1" ProductSku : 对应商品
+
+Store "1" --> "*" ProductSku : 售卖
+Store "1" --> "*" Staff : 所属员工
+
+Product ..|> Searchable : 实现
+DiscountStrategy <|.. FullReductionStrategy : 实现
+DiscountStrategy <|.. CouponStrategy : 实现
+Order ..> DiscountStrategy : 依赖
+@enduml
+
+3. 对象图 Object Diagram
+图意：类图在 2026-11-04 这一时刻的实例快照：顾客 “小宇”（M2026001）在观前街店下单一杯珍珠奶茶（大杯），订单状态为待取餐，支付已完成。
+@startuml 对象图-订单实例快照
+title 对象图 · 2026-11-04 订单实例快照
+skinparam shadowing false
+hide empty members
+
+object "c1 : Customer" as c1 {
+  memberId = "M2026001"
+  nickname = "小宇"
+  points = 1280
+  status = "ACTIVE"
+}
+
+object "o1 : Order" as o1 {
+  orderId = "O20261104001"
+  createTime = "2026-11-04 14:20"
+  totalAmount = 12.00
+  payAmount = 10.00
+  status = "待取餐"
+}
+
+object "item1 : OrderItem" as item1 {
+  quantity = 1
+  unitPrice = 12.00
+}
+
+object "sku1 : ProductSku" as sku1 {
+  skuId = "SKU001001"
+  spec = "珍珠奶茶 大杯 正常冰"
+  price = 12.00
+  status = "上架"
+}
+
+object "p1 : Product" as p1 {
+  productId = "P001"
+  name = "珍珠奶茶"
+}
+
+object "s1 : Store" as s1 {
+  storeId = "S0512001"
+  name = "苏州观前街店"
+}
+
+c1 -- o1 : 发起
+o1 -- item1 : 包含
+item1 -- sku1 : 对应商品
+sku1 -- p1 : 所属商品
+sku1 -- s1 : 所属门店
+
+note right of o1
+  该订单已完成支付，使用2元优惠券，
+  当前门店正在制作，状态为待取餐。
+end note
+@enduml
+
+4. 时序图 Sequence Diagram
+图意：提交订单主流程 18 步消息：顾客→小程序前端→OrderController→各服务→MySQL，含库存校验 note、alt 校验不通过 / 通过双分支、事务边界说明。消息箭头方向与调用方向一致。
+@startuml 时序图-提交订单主流程
+title 时序图 · 提交订单主流程
+autonumber
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+actor "顾客" as C
+participant "小程序前端" as UI
+participant "OrderController" as OC
+participant "UserService" as US
+participant "ProductService" as PS
+participant "OrderRepository" as OR
+participant "PaymentService" as PaySvc
+database "MySQL" as DB
+
+C -> UI : 选择商品规格，点击提交订单
+UI -> OC : POST /orders {skuList, storeId}
+activate OC
+
+OC -> US : getCustomer(userId)
+activate US
+US --> OC : Customer
+deactivate US
+
+OC -> PS : checkAndLockStock(skuList)
+note right of OC
+  校验三项：商品是否上架、
+  门店库存是否充足、门店是否营业
+end note
+alt 库存校验不通过
+  OC --> UI : 409 {code, reason}
+  UI --> C : 提示库存不足/门店已打烊
+else 库存校验通过
+  activate PS
+  PS --> OC : 锁定库存成功
+  deactivate PS
+
+  OC -> OR : save(Order)
+  activate OR
+  OR -> DB : INSERT INTO order_info
+  DB --> OR : ok
+  OR --> OC : Order(orderId, totalAmount)
+  deactivate OR
+
+  OC -> PaySvc : createPayOrder(orderId, amount)
+  PaySvc --> OC : 支付参数
+  OC --> UI : 201 OrderDTO + 支付参数
+  UI --> C : 拉起微信支付
+end
+
+deactivate OC
+
+note over OC, DB
+  事务边界：锁定库存 → 生成订单记录，
+  两步同一事务，任一步失败整体回滚。
+end note
+@enduml
+
+5. 活动图 Activity Diagram（泳道）
+图意：三个泳道（顾客 / 系统 / 门店）划分职责，含库存校验判定节点与两级分支合流：库存不足→更换商品；支付失败→重新支付。
+@startuml 活动图-点单下单流程
+title 活动图（泳道）· 点单下单流程
+skinparam shadowing false
+skinparam ActivityDiamondBackgroundColor #FFF6E5
+
+|顾客|
+start
+:选择门店与商品规格;
+:加入购物车，提交订单;
+
+|系统|
+:校验商品状态与门店库存;
+:计算订单金额与优惠抵扣;
+
+if (库存充足\n且门店营业?) then (是)
+  |系统|
+  :锁定商品库存;
+  :生成待支付订单;
+  |顾客|
+  :完成微信支付;
+  |系统|
+  :更新订单状态为已支付;
+  :推送订单至门店系统;
+  |门店|
+  :接单并制作饮品;
+  :呼叫取餐号;
+  |顾客|
+  :凭取餐码取餐;
+  stop
+else (否)
+  |系统|
+  :返回下单失败原因;
+  |顾客|
+  if (仅因库存不足?) then (是)
+    :更换商品规格/门店;
+    :重新提交订单;
+    stop
+  else (否)
+    :结束下单流程;
+    stop
+  endif
+endif
+@enduml
+
+
+6. 组件图 Component Diagram（Legacy 方括号语法）
+图意：采用 PlantUML Legacy 语法：[组件名] 声明组件、() 接口名 声明接口、-- 表示接口实现（提供）、..> 表示依赖（调用）。三层结构：小程序前端 → API 网关 → 六个业务服务 → MySQL/Redis/ 微信支付。
+@startuml 组件图-Legacy语法
+title 组件图 · 蜜雪冰城小程序（Legacy 方括号语法）
+skinparam shadowing false
+skinparam componentStyle uml2
+
+package "前端层" {
+  [微信小程序端] as MiniApp
+  [H5 活动页] as H5
+}
+
+package "接入层" {
+  [API 网关] as GW
+}
+
+package "业务服务层" {
+  [用户服务] as UserSvc
+  [商品服务] as ProductSvc
+  [订单服务] as OrderSvc
+  [支付服务] as PaySvc
+  [营销服务] as MarketSvc
+  [门店服务] as StoreSvc
+}
+
+package "数据与外部依赖" {
+  [MySQL 数据库] as DB
+  [Redis 缓存] as Cache
+  [微信支付平台] as WxPay
+  [短信服务] as SMS
+}
+
+() "I用户" as IUser
+() "I商品" as IProduct
+() "I订单" as IOrder
+() "I支付" as IPay
+() "I营销" as IMarket
+() "I门店" as IStore
+() "HTTP/JSON" as IHttp
+
+MiniApp - IHttp
+H5 - IHttp
+IHttp -- GW : 提供
+
+GW ..> IUser : 调用
+GW ..> IProduct : 调用
+GW ..> IOrder : 调用
+GW ..> IStore : 调用
+
+IUser -- UserSvc : 实现
+IProduct -- ProductSvc : 实现
+IOrder -- OrderSvc : 实现
+IPay -- PaySvc : 实现
+IMarket -- MarketSvc : 实现
+IStore -- StoreSvc : 实现
+
+OrderSvc ..> IProduct : 依赖
+OrderSvc ..> IUser : 依赖
+OrderSvc ..> IPay : 依赖
+OrderSvc ..> IMarket : 依赖
+MarketSvc ..> IUser : 依赖
+
+OrderSvc ..> DB
+ProductSvc ..> DB
+UserSvc ..> DB
+StoreSvc ..> DB
+ProductSvc ..> Cache
+OrderSvc ..> Cache
+PaySvc ..> WxPay
+UserSvc ..> SMS
+@enduml
+
+
+7. 部署图 Deployment Diagram
+图意：物理拓扑：用户小程序端经 CDN/WAF 进入 nginx 负载均衡，双应用服务器跑 Spring Boot 微服务，MySQL 主从 + 每日备份到 NAS，Redis 做商品与库存缓存，OSS 存商品图片与活动素材。
+@startuml 部署图-蜜雪冰城小程序
+title 部署图 · 蜜雪冰城小程序系统
+skinparam shadowing false
+skinparam nodeBackgroundColor #F4F8FC
+
+node "用户终端\n（手机微信）" as Client {
+  artifact "微信小程序" as MiniApp
+}
+
+node "门店终端\n（安卓收银机）" as Desk {
+  artifact "门店收银系统" as POS
+}
+
+node "公网边界" as FW {
+  artifact "CDN + WAF 防火墙" as WAF
+}
+
+node "应用服务器集群\n（Linux 4C8G）× 2" as App {
+  artifact "nginx 1.24" as NG
+  artifact "mixue-api.jar\n（Spring Boot）" as API
+  artifact "mixue-job.jar\n（定时任务）" as JOB
+}
+
+node "缓存服务器\n（Linux 2C4G）" as CacheNode {
+  artifact "Redis 7 集群" as Redis
+}
+
+node "数据库服务器\n（Linux 8C16G，主从）" as DBNode {
+  database "MySQL 8.0 主库" as MySQL
+  database "MySQL 8.0 从库" as MySQLSlave
+}
+
+node "备份存储（NAS）" as Backup {
+  artifact "每日全量备份 + binlog" as BK
+}
+
+cloud "对象存储 OSS\n（商品图/活动素材）" as OSS
+cloud "微信支付开放平台" as WxPay
+
+MiniApp --> WAF : HTTPS
+POS --> WAF : HTTPS
+WAF --> NG : 反向代理
+NG --> API : 负载均衡
+API --> MySQL : JDBC 3306
+API --> Redis : 6379
+JOB --> MySQL : 批量结算与统计
+MySQL --> MySQLSlave : 主从复制
+MySQL --> BK : 每日 02:00
+API --> OSS : 上传 / 下载
+API --> WxPay : 支付回调
+@enduml
+
+8. 状态机图 State Diagram
+图意：订单全生命周期 7 个状态：待支付→已支付 / 已取消→制作中→待取餐→已完成；逾期未取自动完成，支付超时自动取消，已支付可申请退款。制作中状态触发后厨打印小票。
+@startuml 状态图-订单生命周期
+title 状态机图 · 订单全生命周期
+skinparam shadowing false
+
+[*] --> 待支付 : 用户提交订单
+待支付 --> 已支付 : 支付成功
+待支付 --> 已取消 : 支付超时（15分钟自动取消）
+待支付 --> 已取消 : 用户主动取消
+
+已支付 --> 制作中 : 门店接单
+制作中 --> 待取餐 : 制作完成，呼叫取餐
+
+待取餐 --> 已完成 : 用户取餐核销
+待取餐 --> 已完成 : 取餐超时（当日自动完成）
+
+已支付 --> 已退款 : 用户申请退款且审核通过
+制作中 --> 已退款 : 门店同意退款
+
+已取消 --> [*]
+已完成 --> [*]
+已退款 --> [*]
+
+note right of 制作中
+  进入制作中即触发后厨打印小票，
+  扣减门店实际库存。
+end note
+@enduml
+
+9. 时间图 Timing Diagram
+图意：用 robust/concise 通道展示下单 0~30 时间单位内三个对象的状态变迁：订单（待支付→已支付→制作中→待取餐→已完成）、商品库存（充足→锁定→扣减）、支付（未支付→支付中→支付成功）。
+@startuml 时间图-订单全流程状态
+title 时间图 · 订单下单—制作—取餐全过程
+scale 1.0
+
+robust "订单 Order" as Ord
+concise "商品库存 Stock" as Stk
+robust "支付 Payment" as Pay
+
+@0
+Ord is 待支付
+Stk is 充足
+Pay is 未支付
+
+@1
+Stk is 已锁定
+
+@3
+Ord is 已支付
+Pay is 支付成功
+
+@5
+Ord is 制作中
+Stk is 已扣减
+
+@15
+Ord is 待取餐
+
+@25
+Ord is 已完成
+Stk is 已核销
+@enduml
