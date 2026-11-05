@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>课程实验环境</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .course-toc{list-style:none;padding:0;margin:0}.course-toc ul{list-style:none;margin:3px 0 8px;padding-left:12px}
+    .course-toc a{display:block;font-size:13px;line-height:1.55;padding:4px 8px;border-radius:6px;overflow-wrap:anywhere}
+    .course-toc .toc-document>a{font-weight:700;color:var(--teal)}
+    .course-toc .toc-level-4 a,.course-toc .toc-level-5 a,.course-toc .toc-level-6 a{font-size:12px;color:var(--mute)}
+    .course-document,.course-document h2,.course-document h3,.course-document h4,.course-document h5,.course-document h6{scroll-margin-top:72px}
+    .course-document h2{padding-bottom:6px;border-bottom:1px solid var(--line)}.course-document img{max-width:100%;height:auto;border-radius:8px}
+    .course-document blockquote{margin:12px 0;padding:8px 16px;border-left:4px solid var(--gold);background:#fffaf0;color:var(--mute)}
+    .course-document pre{overflow:auto;padding:14px;background:#102d38;color:#eef8fa;border-radius:8px}
+    .table-scroll{overflow-x:auto;margin:12px 0}.course-document table{border-collapse:collapse;min-width:100%;background:#fff}
+    .course-document th,.course-document td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+    .course-document th{background:var(--light);color:var(--dark)}#course-toc-mobile{display:none}
+    @media(max-width:780px){#course-toc-mobile{display:block;margin:0 0 24px;padding:12px 16px;background:#fff;border:1px solid var(--line);border-radius:10px}#course-toc-mobile summary{font-weight:700;color:var(--teal);cursor:pointer}}
+    @media print{.course-toc{font-size:11px}.course-document{break-inside:auto}.course-document h2{break-after:avoid}}
+  </style>
+</head>
+<body>
+<header class="topbar"><div class="wrap"><div class="brand">《信息系统分析与设计》· 课程资源<small>课程实验环境</small></div>
+  <nav><a href="index.html">门户首页</a><a href="ch01.html">第1章</a></nav>
+</div></header>
+<section class="hero"><div class="wrap"><span class="kicker">COURSE LAB ENVIRONMENT</span><h1>课程实验环境</h1><p>整合课程实验所需的电脑整理、操作系统、GitHub、VS Code、镜像站与建模工具指南。使用下方目录快速跳转。</p></div></section>
+<main class="doc"><aside class="side"><h4>Contents</h4><nav aria-label="Course environment contents"><ul class="course-toc"><li class="toc-document"><a href="#doc-1">A先把github整明白</a><ul></ul></li><li class="toc-document"><a href="#doc-2">github+VScode</a><ul><li class="toc-level-3"><a href="#doc-2-heading-1">vscode 常用设置</a></li></ul></li><li class="toc-document"><a href="#doc-3">Github基础</a><ul><li class="toc-level-3"><a href="#doc-3-heading-1">一、GitHub 运营主体与持久化运营模式</a></li><li class="toc-level-4"><a href="#doc-3-heading-2">盈利来源（支撑平台长期运行）</a></li><li class="toc-level-3"><a href="#doc-3-heading-3">二、个人免费账号：私有仓库规则</a></li><li class="toc-level-4"><a href="#doc-3-heading-4">GitHub Pro（个人付费版，约 7 美元 / 月）</a></li><li class="toc-level-3"><a href="#doc-3-heading-5">三、教学场景实操提示</a></li><li class="toc-level-3"><a href="#doc-3-heading-6">四、极简小结</a></li></ul></li><li class="toc-document"><a href="#doc-4">建模工具</a><ul><li class="toc-level-3"><a href="#doc-4-heading-1">信息系统分析与设计 ISAD｜建模工具与文档模板（中英文对照）</a></li><li class="toc-level-4"><a href="#doc-4-heading-2">文档说明</a></li><li class="toc-level-4"><a href="#doc-4-heading-3">一、结构化建模：DFD 数据流图 Data Flow Diagram</a></li><li class="toc-level-5"><a href="#doc-4-heading-4">1. 术语对照表</a></li><li class="toc-level-5"><a href="#doc-4-heading-5">2. 支持DFD的建模软件（中英文）</a></li><li class="toc-level-4"><a href="#doc-4-heading-6">二、面向对象建模：UML 统一建模语言 Unified Modeling Language</a></li><li class="toc-level-5"><a href="#doc-4-heading-7">1. UML图类中英文对照（ISAD课程必选）</a></li><li class="toc-level-5"><a href="#doc-4-heading-8">2. UML建模工具清单</a></li><li class="toc-level-4"><a href="#doc-4-heading-9">三、业务流程建模：BPMN 业务流程模型与符号 Business Process Model and Notation 2.0</a></li><li class="toc-level-5"><a href="#doc-4-heading-10">1. 核心术语对照</a></li><li class="toc-level-5"><a href="#doc-4-heading-11">2. BPMN流程建模工具</a></li><li class="toc-level-4"><a href="#doc-4-heading-12">四、事件驱动建模 EDM Event-Driven Modeling（档案/政务系统重点）</a></li><li class="toc-level-5"><a href="#doc-4-heading-13">1. 术语中英文对照</a></li><li class="toc-level-5"><a href="#doc-4-heading-14">2. 事件驱动建模工具</a></li><li class="toc-level-4"><a href="#doc-4-heading-15">五、ERD 实体关系图 Entity Relationship Diagram（数据建模）</a></li><li class="toc-level-4"><a href="#doc-4-heading-16">六、需求规格文档模板（中英文标准文件名，IEEE 830 / ISO 29148）</a></li><li class="toc-level-5"><a href="#doc-4-heading-17">1. 文档名称中英文对照（ISAD项目全套文档）</a></li><li class="toc-level-5"><a href="#doc-4-heading-18">2. SRS（软件需求规格说明书）标准目录（中英文大纲）</a></li><li class="toc-level-4"><a href="#doc-4-heading-19">七、全栈建模工具汇总（一站式CASE工具，推荐教学使用）</a></li><li class="toc-level-5"><a href="#doc-4-heading-20">（一）开源免费（课程作业首选，无版权）</a></li><li class="toc-level-5"><a href="#doc-4-heading-21">（二）商用专业（科研项目、毕业设计）</a></li><li class="toc-level-4"><a href="#doc-4-heading-22">八、ISAD建模配套标准文献（中英文文件名）</a></li></ul></li><li class="toc-document"><a href="#doc-5">操作系统激活</a><ul><li class="toc-level-3"><a href="#doc-5-heading-1">正常情况下大家购买的笔记本电脑已经激活了Windows操作系统</a></li><li class="toc-level-4"><a href="#doc-5-heading-2">但是如果你是组装机，你可能需要</a></li><li class="toc-level-4"><a href="#doc-5-heading-3">学校提供了我们免费的Windows操作系统激活密钥</a></li></ul></li><li class="toc-document"><a href="#doc-6">校园网联合镜像站</a><ul></ul></li><li class="toc-document"><a href="#doc-7">电脑桌面</a><ul><li class="toc-level-3"><a href="#doc-7-heading-1">电脑桌面保持清洁（图标少、无杂乱文件）的好处</a></li><li class="toc-level-4"><a href="#doc-7-heading-2">一、操作效率提升</a></li><li class="toc-level-4"><a href="#doc-7-heading-3">二、系统层面</a></li><li class="toc-level-4"><a href="#doc-7-heading-4">三、心理与专注度</a></li><li class="toc-level-4"><a href="#doc-7-heading-5">四、信息安全与文件管理</a></li><li class="toc-level-3"><a href="#doc-7-heading-6">配套小建议</a></li></ul></li></ul></nav></aside>
+<article class="content"><details id="course-toc-mobile"><summary>Contents</summary><nav aria-label="Course environment contents"><ul class="course-toc"><li class="toc-document"><a href="#doc-1">A先把github整明白</a><ul></ul></li><li class="toc-document"><a href="#doc-2">github+VScode</a><ul><li class="toc-level-3"><a href="#doc-2-heading-1">vscode 常用设置</a></li></ul></li><li class="toc-document"><a href="#doc-3">Github基础</a><ul><li class="toc-level-3"><a href="#doc-3-heading-1">一、GitHub 运营主体与持久化运营模式</a></li><li class="toc-level-4"><a href="#doc-3-heading-2">盈利来源（支撑平台长期运行）</a></li><li class="toc-level-3"><a href="#doc-3-heading-3">二、个人免费账号：私有仓库规则</a></li><li class="toc-level-4"><a href="#doc-3-heading-4">GitHub Pro（个人付费版，约 7 美元 / 月）</a></li><li class="toc-level-3"><a href="#doc-3-heading-5">三、教学场景实操提示</a></li><li class="toc-level-3"><a href="#doc-3-heading-6">四、极简小结</a></li></ul></li><li class="toc-document"><a href="#doc-4">建模工具</a><ul><li class="toc-level-3"><a href="#doc-4-heading-1">信息系统分析与设计 ISAD｜建模工具与文档模板（中英文对照）</a></li><li class="toc-level-4"><a href="#doc-4-heading-2">文档说明</a></li><li class="toc-level-4"><a href="#doc-4-heading-3">一、结构化建模：DFD 数据流图 Data Flow Diagram</a></li><li class="toc-level-5"><a href="#doc-4-heading-4">1. 术语对照表</a></li><li class="toc-level-5"><a href="#doc-4-heading-5">2. 支持DFD的建模软件（中英文）</a></li><li class="toc-level-4"><a href="#doc-4-heading-6">二、面向对象建模：UML 统一建模语言 Unified Modeling Language</a></li><li class="toc-level-5"><a href="#doc-4-heading-7">1. UML图类中英文对照（ISAD课程必选）</a></li><li class="toc-level-5"><a href="#doc-4-heading-8">2. UML建模工具清单</a></li><li class="toc-level-4"><a href="#doc-4-heading-9">三、业务流程建模：BPMN 业务流程模型与符号 Business Process Model and Notation 2.0</a></li><li class="toc-level-5"><a href="#doc-4-heading-10">1. 核心术语对照</a></li><li class="toc-level-5"><a href="#doc-4-heading-11">2. BPMN流程建模工具</a></li><li class="toc-level-4"><a href="#doc-4-heading-12">四、事件驱动建模 EDM Event-Driven Modeling（档案/政务系统重点）</a></li><li class="toc-level-5"><a href="#doc-4-heading-13">1. 术语中英文对照</a></li><li class="toc-level-5"><a href="#doc-4-heading-14">2. 事件驱动建模工具</a></li><li class="toc-level-4"><a href="#doc-4-heading-15">五、ERD 实体关系图 Entity Relationship Diagram（数据建模）</a></li><li class="toc-level-4"><a href="#doc-4-heading-16">六、需求规格文档模板（中英文标准文件名，IEEE 830 / ISO 29148）</a></li><li class="toc-level-5"><a href="#doc-4-heading-17">1. 文档名称中英文对照（ISAD项目全套文档）</a></li><li class="toc-level-5"><a href="#doc-4-heading-18">2. SRS（软件需求规格说明书）标准目录（中英文大纲）</a></li><li class="toc-level-4"><a href="#doc-4-heading-19">七、全栈建模工具汇总（一站式CASE工具，推荐教学使用）</a></li><li class="toc-level-5"><a href="#doc-4-heading-20">（一）开源免费（课程作业首选，无版权）</a></li><li class="toc-level-5"><a href="#doc-4-heading-21">（二）商用专业（科研项目、毕业设计）</a></li><li class="toc-level-4"><a href="#doc-4-heading-22">八、ISAD建模配套标准文献（中英文文件名）</a></li></ul></li><li class="toc-document"><a href="#doc-5">操作系统激活</a><ul><li class="toc-level-3"><a href="#doc-5-heading-1">正常情况下大家购买的笔记本电脑已经激活了Windows操作系统</a></li><li class="toc-level-4"><a href="#doc-5-heading-2">但是如果你是组装机，你可能需要</a></li><li class="toc-level-4"><a href="#doc-5-heading-3">学校提供了我们免费的Windows操作系统激活密钥</a></li></ul></li><li class="toc-document"><a href="#doc-6">校园网联合镜像站</a><ul></ul></li><li class="toc-document"><a href="#doc-7">电脑桌面</a><ul><li class="toc-level-3"><a href="#doc-7-heading-1">电脑桌面保持清洁（图标少、无杂乱文件）的好处</a></li><li class="toc-level-4"><a href="#doc-7-heading-2">一、操作效率提升</a></li><li class="toc-level-4"><a href="#doc-7-heading-3">二、系统层面</a></li><li class="toc-level-4"><a href="#doc-7-heading-4">三、心理与专注度</a></li><li class="toc-level-4"><a href="#doc-7-heading-5">四、信息安全与文件管理</a></li><li class="toc-level-3"><a href="#doc-7-heading-6">配套小建议</a></li></ul></li></ul></nav></details>
+<section class="course-document" aria-labelledby="doc-1"><h2 id="doc-1">A先把github整明白</h2><p>别急着学编程或者 AI！先把 GitHub 玩明白！</p>
+✦ 小提示
+用户名建议用英文或者拼音，省得后续有很多麻烦。
+注册完你会看到一个首页，先别慌着到处点，我们下一步来看看怎么搜你想要的东西。
+
+GitHub 有个神奇传统：程序员们把好东西整理成清单， 清单名都以 awesome 开头。
+<p>📌 想找 AI 提示词？搜 awesome chatgpt prompts</p>
+<p>📌 想找效率工具？搜 awesome productivity</p>
+<p>📌 想找设计资源？搜 awesome design SKILL 2 按Star排序 搜完之后，点页面上的 Stars 排序。Star越多的项目，越多人用，越靠谱，踩坑概率越低。</p>
+SKILL 3
+加 -cn 或 中文 标记
+很多热心中文开发者会在项目名里加 –cn 后缀，所以 搜项目名 –cn 就能找到中文版。
+想找中文资源的时候 不要依赖筛选里的语言选项（那个不太准） 直接在关键词后面加 –cn 或 中文
+awesome Agent 改成 
+<p>搜：awesome Agent –cn</p>
+<p>或者：awesome Agent 中文</p>
+<p>出来的结果大概率是中文内容，比硬啃英文舒服多了。</p>
+
+SKILL 1
+About（右上角）
+一句话告诉你这个项目是干嘛的。看不懂就复制到翻译软件里看。
+<p>SKILL 2 README（中间一大段） 这是项目的&quot;说明书&quot;。里面有介绍、截图、使用方法。一般往下翻就能看到截图，看截图你就知道这个项目长什么样了。</p>
+<p>SKILL 3 Star（右上角星星） 点一下星星，这个项目就收藏到你账号里了。以后在你的头像 → Your stars 里就能找到。</p>
+<p>SKILL 4 Issues（顶部标签） 这里是用户提问题、反馈bug的地方。你遇到问题了，先去Issues里搜一下，大概率别人已经问过了，答案就在里面。</p>
+<img width="419" height="105" alt="局部截取_20260923_091141" src="https://github.com/user-attachments/assets/e9916e5c-1fbb-45f6-a73c-782e58181597" />
+
+看好一个项目想下载？找到那个绿色的 Code 按钮，点一下。
+<img width="1437" height="680" alt="局部截取_20260923_091236" src="https://github.com/user-attachments/assets/8dce671e-3fd4-4383-b2b2-c8f898139e62" />
+如果你只是想看看代码、拿个模板、下载点资料，选这个。下载下来是个压缩包，解压就能看。
+<img width="2234" height="728" alt="局部截取_20260923_091729" src="https://github.com/user-attachments/assets/b6dae3d8-55cd-4428-9ca3-964161879bd0" />
+<img width="398" height="107" alt="局部截取_20260923_091747" src="https://github.com/user-attachments/assets/3d0df9e8-6f1d-4a39-9e35-fe96034dca30" />
+很多人第一次用GitHub，打开一个页面要等半天，最后以为是自己网不好。
+<p>其实不是你的问题，是GitHub的服务器在国外，国内访问本来就慢。</p>
+<img width="869" height="452" alt="局部截取_20260923_091828" src="https://github.com/user-attachments/assets/5b5f8630-05b4-47d4-9ad6-354c53fc3dca" />
+<p>🚀 办法 1: 用 Watt Toolkit 百度搜 Watt Toolkit 下载安装，打开会看到一排开关，把 GitHub 勾上，一键加速就行。 </p>
+<p>🚀 办法 2: 用镜像站（备选） 镜像站就是 GitHub 在国内的 &quot;替身&quot;，镜像站经常变动，这里就不写具体地址了，你在浏览器搜「github 镜像站」 会出来很多，挑一个最新的用就行，把链接里的 github.com 换成镜像地址即可。</p>
+<p>🚀 办法 3: 学校刚刚上新的福利：夸克浏览器云桥版</p>
+<a href="https://scholar.edu.cn/" target="_blank">夸克浏览器云桥版</a>
+<p>✦ 小提示 镜像站只是用来&quot;看&quot;和&quot;下载&quot;的，别用来登录账号，安全第一。</p>
+<h5>看完上面的教程，你是不是已经手痒想搜点东西了？给你推荐几个亲测好用的内容:</h5>
+<p>awesome-chatgpt-prompts-cn 中文版提示词大全，几百个现成Prompt，比公众号上那些&quot;100个神级Prompt&quot;靠谱十倍。</p>
+<p>Reactive-Resume 免费开源的简历制作工具，在线版直接用，不用下载，模板好看还能导出PDF。</p>
+<p>HelloGitHub 中文社区，每月发布一期&quot;GitHub好物推荐&quot;，像翻杂志一样发现有趣项目，每期都不一样。</p>
+<p>Stirling-PDF 免费开源的PDF处理神器，合并、拆分、压缩、转格式都能用。</p>
+<p>yt-dlp 免费下载YouTube、B站等网站视频，无广告。</p>
+<p><strong><em>关于公有与私有的区别</strong></em></p>
+<img width="2454" height="824" alt="局部截取_20260924_091250" src="https://github.com/user-attachments/assets/03d9f323-8a9b-41e7-bfd0-8e7c8547d9db" /></section><section class="course-document" aria-labelledby="doc-2"><h2 id="doc-2">github+VScode</h2><p>先下载安装完成 VScode，git 然后打开 VScode，登录自己的 github 账号 <img src="../media/20261009_084303.png" alt="VS Code 登录界面" loading="lazy"></p>
+<p>找到并打开聊天窗口</p>
+<p>让 Copilot 帮我们配置用户名和邮箱</p>
+<p><img src="../media/20261009_084700.png" alt="Copilot 聊天窗口" loading="lazy"></p>
+<p>多说一句，AI辅助真香…… <img src="../media/20261009_085405.png" alt="Git 提交界面" loading="lazy"></p>
+<h3 id="doc-2-heading-1">vscode 常用设置</h3>
+<ul><li>自动保存：在编辑文件时，自动保存文件。</li><li>代码格式化：在保存文件时，自动格式化代码。</li><li>代码注释：在代码中添加注释，方便后续维护。</li><li>安装扩展：在 VScode 中安装扩展，如 Python、Git 等，以增强功能。</li></ul>
+<p><img src="../media/20261105_081409.png" alt="alt text" loading="lazy"></p></section><section class="course-document" aria-labelledby="doc-3"><h2 id="doc-3">Github基础</h2><h3 id="doc-3-heading-1">一、GitHub 运营主体与持久化运营模式</h3>
+<p>GitHub 日常运营主体为 <strong>GitHub, Inc.</strong>，2018 年被微软收购，作为微软旗下独立子品牌运营，由 GitHub 原有团队负责平台运维、产品迭代、社区管理；底层基础设施依托微软 Azure 云。GitHub 属于商业 SaaS 平台，并非公益项目。</p>
+<h4 id="doc-3-heading-2">盈利来源（支撑平台长期运行）</h4>
+<ol><li>企业 / 团队订阅：GitHub Team、GitHub Enterprise（企业云端 / 本地私有化部署），是稳定基础现金流；</li><li>GitHub Copilot：AI 代码助手订阅，近年增长最快的收入板块；</li><li>按量计费增值服务：GitHub Actions、Codespaces、Packages 超额资源计费、高级代码安全扫描；</li><li>其他：GitHub Marketplace 应用佣金、GitHub Sponsors 赞助分成等。</li></ol>
+<blockquote><p>免费公开仓库、GitHub Pages 采用<strong>免费增值 Freemium</strong>策略：吸引开发者、师生搭建生态，免费用户的服务器与存储成本，由企业大客户与付费功能收入补贴。免费并非无限制，存储、带宽、CI 运行时长存在配额。</p></blockquote>
+<h3 id="doc-3-heading-3">二、个人免费账号：私有仓库规则</h3>
+<p>✅ <strong>私有仓库数量：无上限，可以创建无限多个私有仓库</strong>（2019 年取消私有仓库个数限制） ✅ 私有仓库协作者人数无上限</p>
+<p>⚠️ 核心限制（个人免费版 GitHub Free）</p>
+<ol><li>存储：<strong>全部仓库（公有 + 私有）Git 仓库合计上限 10GB</strong>；Packages 包存储免费额度 500MB；GitHub Actions 每月 2000 分钟免费时长；</li><li>功能限制：<strong>私有仓库不能直接启用 GitHub Pages</strong>；缺少高级分支保护、高级安全扫描、优先技术支持等 Pro 专属功能；</li></ol>
+<blockquote><p>瓶颈不是仓库数量，而是文件总容量，大量高清图片、扫描件、PDF 会快速耗尽存储空间。</p></blockquote>
+<h4 id="doc-3-heading-4">GitHub Pro（个人付费版，约 7 美元 / 月）</h4>
+<p>私有仓库数量同样不限；解锁私有仓库 GitHub Pages、高级安全、分支保护等全部个人高级功能。</p>
+<h3 id="doc-3-heading-5">三、教学场景实操提示</h3>
+<ol><li>免费个人账号可新建大量私有教材仓库，但私有库无法直接部署网页；</li><li>想要网页展示，二选一：</li></ol><ul><li>方案 A：仓库设置为<strong>公开仓库</strong>，直接启用 GitHub Pages；</li><li>方案 B：升级 GitHub Pro，私有仓库开启 Pages；</li></ul><ol><li>存放碑帖大图、档案扫描件时，留意总存储容量，避免超出 10GB 限额。</li></ol>
+<h3 id="doc-3-heading-6">四、极简小结</h3>
+<blockquote><p>GitHub 由微软旗下 GitHub 团队运营，依靠企业订阅、Copilot、云资源增值服务维持平台运转。</p><p>个人免费账号私有仓库<strong>数量不限</strong>，约束来自总存储容量与功能权限；免费私有库不能直接开启 GitHub Pages。</p></blockquote></section><section class="course-document" aria-labelledby="doc-4"><h2 id="doc-4">建模工具</h2><h3 id="doc-4-heading-1">信息系统分析与设计 ISAD｜建模工具与文档模板（中英文对照）</h3>
+<h4 id="doc-4-heading-2">文档说明</h4>
+<ul><li>适用场景：iSchool研究生课程、数字人文/档案系统、政务信息系统需求分析与建模</li><li>建模体系：结构化DFD → 面向对象UML → 业务流程BPMN → 事件驱动EDM → 需求规格SRS</li><li>标准来源：OMG、IEEE 830、ISO/IEC 29148、Dennis &amp; Wixom《Systems Analysis and Design》</li></ul>
+<hr>
+<h4 id="doc-4-heading-3">一、结构化建模：DFD 数据流图 Data Flow Diagram</h4>
+<h5 id="doc-4-heading-4">1. 术语对照表</h5>
+<div class="table-scroll"><table><thead><tr><th>中文名称</th><th>English Name</th><th>缩写</th><th>说明</th></tr></thead><tbody><tr><td>数据流图</td><td>Data Flow Diagram</td><td>DFD</td><td>结构化分析核心模型，描述数据在系统内流转</td></tr><tr><td>外部实体</td><td>External Entity</td><td>EE</td><td>系统外部参与者（用户、外部系统）</td></tr><tr><td>处理过程</td><td>Process</td><td>P</td><td>数据加工操作</td></tr><tr><td>数据流</td><td>Data Flow</td><td>DF</td><td>数据传递路径</td></tr><tr><td>数据存储</td><td>Data Store</td><td>DS</td><td>数据库、文件、档案库</td></tr><tr><td>顶层图（0层图）</td><td>Context Diagram / Level 0 DFD</td><td>-</td><td>系统边界与外部交互</td></tr><tr><td>分层数据流图</td><td>Leveled DFD</td><td>-</td><td>逐层分解，保证父图子图平衡</td></tr><tr><td>数据字典</td><td>Data Dictionary</td><td>DD</td><td>定义数据项、数据结构</td></tr><tr><td>加工逻辑说明</td><td>Process Specification</td><td>PSPEC</td><td>结构化语言、判定表、判定树</td></tr></tbody></table></div>
+<h5 id="doc-4-heading-5">2. 支持DFD的建模软件（中英文）</h5>
+<div class="table-scroll"><table><thead><tr><th>工具中文名</th><th>Tool English Name</th><th>开源/商用</th><th>核心能力</th></tr></thead><tbody><tr><td>微软Visio</td><td>Microsoft Visio</td><td>商用</td><td>DFD、ER图、流程图，Office生态首选</td></tr><tr><td>亿图图示</td><td>EdrawMax</td><td>商用+免费版</td><td>内置DFD模板，一键导出矢量图</td></tr><tr><td>Visual Paradigm</td><td>Visual Paradigm</td><td>商用+社区版</td><td>完整支持分层DFD、数据字典</td></tr><tr><td>Modelio</td><td>Modelio</td><td>开源免费</td><td>DFD+UML+BPMN一体化建模</td></tr><tr><td>Software Ideas Modeler</td><td>Software Ideas Modeler</td><td>免费版+付费</td><td>轻量CASE工具，支持DFD与ERD</td></tr></tbody></table></div>
+<hr>
+<h4 id="doc-4-heading-6">二、面向对象建模：UML 统一建模语言 Unified Modeling Language</h4>
+<h5 id="doc-4-heading-7">1. UML图类中英文对照（ISAD课程必选）</h5>
+<div class="table-scroll"><table><thead><tr><th>中文图名</th><th>English Diagram Name</th><th>用途（系统分析阶段）</th></tr></thead><tbody><tr><td>用例图</td><td>Use Case Diagram</td><td>需求捕获、业务参与者与功能范围</td></tr><tr><td>类图</td><td>Class Diagram</td><td>业务实体、档案对象、实体关系</td></tr><tr><td>序列图</td><td>Sequence Diagram</td><td>业务交互时序、消息传递</td></tr><tr><td>活动图</td><td>Activity Diagram</td><td>业务流程、分支逻辑</td></tr><tr><td>状态图</td><td>State Machine Diagram</td><td>文档/档案生命周期状态流转</td></tr><tr><td>组件图</td><td>Component Diagram</td><td>系统模块、接口集成</td></tr></tbody></table></div>
+<h5 id="doc-4-heading-8">2. UML建模工具清单</h5>
+<div class="table-scroll"><table><thead><tr><th>中文名称</th><th>English Name</th><th>开源属性</th><th>适配ISAD教学</th></tr></thead><tbody><tr><td>Enterprise Architect</td><td>Sparx EA</td><td>商用</td><td>高校iSchool首选，支持UML+BPMN+DFD全模型</td></tr><tr><td>Visual Paradigm</td><td>Visual Paradigm</td><td>社区免费</td><td>教学作业、用例与类图建模</td></tr><tr><td>Modelio</td><td>Modelio</td><td>完全开源</td><td>无版权限制，适合课程教学</td></tr><tr><td>Draw.io (Diagrams.net)</td><td>Draw.io</td><td>开源免费</td><td>在线协作，UML+DFD+BPMN全图形</td></tr><tr><td>StarUML</td><td>StarUML</td><td>免费版</td><td>轻量桌面UML工具</td></tr></tbody></table></div>
+<hr>
+<h4 id="doc-4-heading-9">三、业务流程建模：BPMN 业务流程模型与符号 Business Process Model and Notation 2.0</h4>
+<h5 id="doc-4-heading-10">1. 核心术语对照</h5>
+<div class="table-scroll"><table><thead><tr><th>中文术语</th><th>English Term</th><th>缩写</th></tr></thead><tbody><tr><td>业务流程模型与符号</td><td>Business Process Model and Notation</td><td>BPMN 2.0</td></tr><tr><td>泳道</td><td>Swimlane</td><td>-</td><td>角色/部门权责划分</td></tr><tr><td>任务</td><td>Task</td><td>-</td><td>原子业务操作</td></tr><tr><td>开始事件</td><td>Start Event</td><td>-</td><td>流程触发点</td></tr><tr><td>结束事件</td><td>End Event</td><td>-</td><td>流程终止点</td></tr><tr><td>网关</td><td>Gateway</td><td>-</td><td>分支、合并、排他逻辑</td></tr><tr><td>子流程</td><td>Sub-Process</td><td>-</td><td>封装复杂业务环节</td></tr><tr><td>案例管理模型</td><td>Case Management Model and Notation</td><td>CMMN</td><td>非结构化业务（档案办理、政务审批）</td></tr><tr><td>决策模型</td><td>Decision Model and Notation</td><td>DMN</td><td>业务规则、审批条件</td></tr></tbody></table></div>
+<h5 id="doc-4-heading-11">2. BPMN流程建模工具</h5>
+<div class="table-scroll"><table><thead><tr><th>中文名称</th><th>English Name</th><th>适用场景</th></tr></thead><tbody><tr><td>Bizagi Modeler</td><td>Bizagi Modeler</td><td>免费教学版，绘制审批流程</td></tr><tr><td>Camunda Modeler</td><td>Camunda Modeler</td><td>开源，流程可直接部署执行</td></tr><tr><td>SAP Signavio</td><td>SAP Signavio</td><td>企业级流程治理、流程挖掘</td></tr><tr><td>IBM Blueworks Live</td><td>IBM Blueworks Live</td><td>团队在线协同建模</td></tr><tr><td>Draw.io</td><td>Diagrams.net</td><td>免费在线BPMN绘图</td></tr></tbody></table></div>
+<hr>
+<h4 id="doc-4-heading-12">四、事件驱动建模 EDM Event-Driven Modeling（档案/政务系统重点）</h4>
+<h5 id="doc-4-heading-13">1. 术语中英文对照</h5>
+<div class="table-scroll"><table><thead><tr><th>中文名称</th><th>English Name</th><th>缩写</th></tr></thead><tbody><tr><td>事件驱动建模</td><td>Event-Driven Modeling</td><td>EDM</td></tr><tr><td>领域事件</td><td>Domain Event</td><td>-</td><td>档案新增、归档、借阅、销毁等业务事件</td></tr><tr><td>事件风暴</td><td>Event Storming</td><td>-</td><td>多人协作梳理业务事件</td></tr><tr><td>事件流程图</td><td>Event Flow Diagram</td><td>EFD</td></tr><tr><td>状态事件图</td><td>State Event Diagram</td><td>SED</td></tr><tr><td>消息队列</td><td>Message Queue</td><td>MQ</td></tr><tr><td>CQRS</td><td>Command Query Responsibility Segregation</td><td>CQRS</td><td>命令与查询分离（数字档案系统常用）</td></tr></tbody></table></div>
+<h5 id="doc-4-heading-14">2. 事件驱动建模工具</h5>
+<ol><li>Draw.io / Diagrams.net：绘制事件流、状态图</li><li>Visual Paradigm：事件风暴+领域模型一体化</li><li>Lucidchart：在线协作事件风暴白板</li><li>Modelio：领域事件+UML类图联动建模</li></ol>
+<hr>
+<h4 id="doc-4-heading-15">五、ERD 实体关系图 Entity Relationship Diagram（数据建模）</h4>
+<div class="table-scroll"><table><thead><tr><th>中文名称</th><th>English Name</th><th>缩写</th></tr></thead><tbody><tr><td>实体关系图</td><td>Entity Relationship Diagram</td><td>ERD</td></tr><tr><td>实体</td><td>Entity</td><td>E</td><td>业务对象（案卷、人员、机构）</td></tr><tr><td>属性</td><td>Attribute</td><td>A</td><td>字段元数据</td></tr><tr><td>主键</td><td>Primary Key</td><td>PK</td></tr><tr><td>外键</td><td>Foreign Key</td><td>FK</td></tr><tr><td>一对一</td><td>One-to-One</td><td>1:1</td></tr><tr><td>一对多</td><td>One-to-Many</td><td>1:N</td></tr><tr><td>多对多</td><td>Many-to-Many</td><td>M:N</td></tr></tbody></table></div>
+<p>工具：Visio、Draw.io、PowerDesigner、Navicat Data Modeler</p>
+<hr>
+<h4 id="doc-4-heading-16">六、需求规格文档模板（中英文标准文件名，IEEE 830 / ISO 29148）</h4>
+<h5 id="doc-4-heading-17">1. 文档名称中英文对照（ISAD项目全套文档）</h5>
+<div class="table-scroll"><table><thead><tr><th>中文文档名</th><th>English Document Name</th><th>标准缩写</th><th>适用阶段</th></tr></thead><tbody><tr><td>业务需求说明书</td><td>Business Requirements Specification</td><td>BRS</td><td>立项阶段</td></tr><tr><td>干系人需求说明书</td><td>Stakeholder Requirements Specification</td><td>StRS</td><td>需求调研</td></tr><tr><td>系统需求说明书</td><td>System Requirements Specification</td><td>SyRS</td><td>信息系统项目</td></tr><tr><td>软件需求规格说明书</td><td>Software Requirements Specification</td><td>SRS</td><td>软件开发（IEEE 830标准）</td></tr><tr><td>运营概念文档</td><td>Concept of Operations</td><td>ConOps</td><td>政务/档案系统</td></tr><tr><td>需求跟踪矩阵</td><td>Requirements Traceability Matrix</td><td>RTM</td><td>全程需求管控</td></tr><tr><td>系统概要设计说明书</td><td>System Design Specification</td><td>SDS</td><td>概要设计</td></tr><tr><td>详细设计说明书</td><td>Detailed Design Specification</td><td>DDS</td><td>详细建模</td></tr></tbody></table></div>
+<h5 id="doc-4-heading-18">2. SRS（软件需求规格说明书）标准目录（中英文大纲）</h5>
+<ol><li>引言 Introduction</li></ol>
+<p>1.1 项目背景 Project Background 1.2 文档目的 Purpose of Document 1.3 文档范围 Scope 1.4 读者对象 Intended Audience 1.5 参考文献 References 1.6 术语与缩略语 Glossary &amp; Acronyms</p>
+<ol><li>总体描述 Overall Description</li></ol>
+<p>2.1 产品愿景 Product Vision 2.2 系统环境 System Environment 2.3 用户角色 User Roles 2.4 业务约束 Business Constraints</p>
+<ol><li>功能需求 Functional Requirements (FR)</li><li>非功能需求 Non-Functional Requirements (NFR)</li></ol>
+<p>4.1 性能 Performance 4.2 安全性 Security 4.3 可用性 Usability 4.4 可靠性 Reliability 4.5 可维护性 Maintainability 4.6 兼容性 Compatibility</p>
+<ol><li>外部接口需求 External Interface Requirements</li></ol>
+<p>5.1 用户界面 UI 5.2 软硬件接口 Hardware &amp; Software Interface 5.3 数据接口 Data Interface</p>
+<ol><li>数据需求 Data Requirements</li></ol>
+<p>6.1 数据字典 Data Dictionary 6.2 ERD 实体关系模型</p>
+<ol><li>附录 Appendices</li></ol>
+<p>附录 A：DFD 数据流图 附录 B：UML 用例图、类图 附录 C：BPMN 业务流程图 附录 D：需求跟踪矩阵 RTM</p>
+<hr>
+<h4 id="doc-4-heading-19">七、全栈建模工具汇总（一站式CASE工具，推荐教学使用）</h4>
+<h5 id="doc-4-heading-20">（一）开源免费（课程作业首选，无版权）</h5>
+<ol><li>Draw.io (Diagrams.net)：DFD+UML+BPMN+ERD+事件图，在线协作</li><li>Modelio：UML+BPMN+DFD一体化CASE工具</li><li>StarUML：轻量UML建模</li><li>Camunda Modeler：BPMN流程建模</li></ol>
+<h5 id="doc-4-heading-21">（二）商用专业（科研项目、毕业设计）</h5>
+<ol><li>Sparx Enterprise Architect（EA）：iSchool全球主流CASE工具，全模型联动</li><li>Visual Paradigm：需求+建模+文档自动生成</li><li>Microsoft Visio：办公环境快速绘图</li><li>PowerDesigner：数据建模+ERD+数据库生成</li></ol>
+<hr>
+<h4 id="doc-4-heading-22">八、ISAD建模配套标准文献（中英文文件名）</h4>
+<ol><li>Systems Analysis and Design (Dennis, Wixom) — 教材</li><li>IEEE 830-1998: IEEE Recommended Practice for Software Requirements Specifications</li><li>ISO/IEC/IEEE 29148:2018 需求工程国际标准</li><li>OMG UML 2.5 Specification</li><li>OMG BPMN 2.0 Specification</li><li>OMG DMN &amp; CMMN 业务规则与案例建模规范</li></ol>
+<p><a href="plantuml:https://github.com/plantuml/plantuml">plantuml:https://github.com/plantuml/plantuml</a></p></section><section class="course-document" aria-labelledby="doc-5"><h2 id="doc-5">操作系统激活</h2><h3 id="doc-5-heading-1">正常情况下大家购买的笔记本电脑已经激活了Windows操作系统</h3>
+<h4 id="doc-5-heading-2">但是如果你是组装机，你可能需要</h4>
+<p>自己激活Windows操作系统。</p>
+<p>suda人的福利,不用像我们当年一样冒险找各种野路子： <a href="https://its.suda.edu.cn/1603/list.htm">https://its.suda.edu.cn/1603/list.htm</a></p>
+<h4 id="doc-5-heading-3">学校提供了我们免费的Windows操作系统激活密钥</h4>
+<p>你可以在学校网站上找到。<a href="https://its.suda.edu.cn/1603/list.htm">苏州大学正版软件</a></p>
+<pre><code class="language-">作为我们大学四年甚至更长时间的伙伴，最好花点时间盘一下操作系统的安装与激活。</code></pre></section><section class="course-document" aria-labelledby="doc-6"><h2 id="doc-6">校园网联合镜像站</h2><p>告别“换源选择困难症”：不要再在清华源 (TUNA)、中科大源 (USTC)、上交大源 (SJTU)、南大源 (NJU) 和阿里源之间反复横跳、互相踩雷了。 由教育部和中国教育和科研计算机网（CERNET）网络中心正式支持的校园网联合镜像站（mirrors.cernet.edu.cn ( <a href="https://mirrors.cernet.edu.cn/">https://mirrors.cernet.edu.cn/</a> )），就是开源镜像界的“终极大一统”入口。</p>
+<p>详见：<a href="https://mp.weixin.qq.com/s/QskdPPosLLrfJ86VgIBNew">https://mp.weixin.qq.com/s/QskdPPosLLrfJ86VgIBNew</a></p></section><section class="course-document" aria-labelledby="doc-7"><h2 id="doc-7">电脑桌面</h2><h3 id="doc-7-heading-1">电脑桌面保持清洁（图标少、无杂乱文件）的好处</h3>
+<p>分<strong>效率、系统、心理、安全</strong>四个维度</p>
+<h4 id="doc-7-heading-2">一、操作效率提升</h4>
+<ol><li><strong>快速定位文件</strong>：图标越少，找目标文件/软件的视觉搜索成本越低，不用在一堆图标里逐个辨认，减少鼠标移动、查找时间。</li><li><strong>减少误操作</strong>：避免误点、误拖动、误删除文件；同时桌面清爽，方便你临时整理素材、截图。</li><li><strong>快捷访问逻辑清晰</strong>：桌面只放高频使用入口，低频文件统一归档到文件夹，养成分类存放习惯。</li></ol>
+<h4 id="doc-7-heading-3">二、系统层面</h4>
+<blockquote><p>很多人忽略这一点：桌面本质上也是系统文件夹</p></blockquote>
+<ol><li><strong>降低资源管理器负载</strong>：桌面每一个图标、缩略图（图片、视频、PDF），开机时资源管理器都要加载预览、渲染图标。桌面文件巨多、大量图片文件堆积，极易造成：开机桌面加载卡顿、选中/拖动文件失灵、资源管理器卡死、自动重启，正好对应你之前遇到的故障。</li><li><strong>开机速度小幅优化</strong>：开机阶段系统会遍历桌面目录渲染图标，桌面文件越多，桌面加载完成越慢。</li><li><strong>减少缩略图缓存异常</strong>：大量图片放在桌面，缩略图缓存容易损坏，出现图标空白、预览加载失败。</li><li><strong>降低C盘占用风险</strong>：桌面默认路径在C盘（<code>C:\Users\你的用户名\Desktop</code>），文件堆桌面很容易悄悄占满系统盘，导致系统卡顿、更新失败。</li></ol>
+<h4 id="doc-7-heading-4">三、心理与专注度</h4>
+<ol><li><strong>减少视觉干扰</strong>：杂乱桌面相当于持续的视觉噪音，打开电脑第一眼大量信息冲击，更容易分心；干净桌面有助于进入专注工作、学习状态。</li><li><strong>降低心理负担</strong>：满桌面未处理文件，潜意识里会持续提醒你“待办很多”，带来隐性焦虑；清爽桌面有“清空待办”的心理暗示。</li></ol>
+<h4 id="doc-7-heading-5">四、信息安全与文件管理</h4>
+<ol><li><strong>防止隐私泄露</strong>：远程协助、投屏、截图分享时，桌面不会无意间暴露敏感文档、证件截图、项目资料。</li><li><strong>降低文件丢失风险</strong>：桌面属于临时存放区，不适合长期存档。很多人系统重装、账户出问题时，才发现重要文件都放在桌面，忘记备份；固定归档到其他盘，文件更安全。</li><li><strong>便于定期整理复盘</strong>：桌面作为“临时工作台”，养成定期清理归档的习惯，倒逼自己梳理文件，避免资料越积越乱。</li></ol>
+<hr>
+<h3 id="doc-7-heading-6">配套小建议</h3>
+<ul><li>桌面原则：<strong>只放高频快捷方式，不放原始文件</strong>；临时文件设置7天清理周期，完成后移动到D盘归档目录；</li><li>如果你喜欢Windows聚焦壁纸：保留壁纸自动轮换，用注册表方法</li></ul>
+<p><img src="../media/20261105_080322.png" alt="alt text" loading="lazy"> 可隐藏「了解有关此图片的信息」图标，兼顾好看+干净；</p>
+<ul><li>不要把大量图片直接堆桌面，这也是加重资源管理器异常的诱因之一。</li></ul></section>
+</article></main></body></html>

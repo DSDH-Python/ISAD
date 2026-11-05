@@ -9,7 +9,7 @@
 | 路径 | 内容 |
 | --- | --- |
 | [`html教材/`](html教材/) | 教材门户|
-| [`games/`](games/) | 对应各章的互动练习 |
+| [`html教材/`](html教材/) | 教材门户、章节正文及各章互动练习 |
 | [`pages/appendix.html`](pages/appendix.html) | 课程附录正文 |
 | [`pages/legacy/`](pages/legacy/) | 已归档的章节与附录旧网址跳转页 |
 | [`style.css`](style.css)、[`app.js`](app.js) | 全站样式与交互 |
@@ -22,7 +22,7 @@
 ## 使用
 
 - 从 [`html教材/index.html`](html教材/index.html) 浏览教材。
-- 在 [`games/`](games/) 中打开 `game_chNN.html` 体验对应章节练习。
+- 在 [`html教材/`](html教材/) 中打开 `game_chNN.html` 体验对应章节练习。
 - 根目录 [`index.html`](index.html) 是 GitHub Pages 首页入口，会跳转到教材门户。
 - 章节及附录正文分别位于 [`html教材/`](html教材/) 和 [`pages/`](pages/)。旧网址跳转页收纳在 [`pages/legacy/`](pages/legacy/)；根目录只保留首页，旧的根路径兼��[...]
 - 使用 VS Code 和 Git 的说明见 [`github+VScode.md`](github+VScode.md)。
@@ -88,7 +88,7 @@ git diff --check
 | 王思彤 | [wincent928](https://github.com/wincent928) |
 | 俞思文 | [yusiwen1021](https://github.com/yusiwen1021) |
 | 成塘 |  [plug2778](https://github.com/plug2778) |
-| 何梓萱 | — |
+| 何梓萱 | [18356381572-cmd](https://github.com/18356381572-cmd) |
 | 胡佳宁 | — |
 | 董润叶 | — |
 | 王晨雨 | Y_eaaa0611 |
@@ -98,7 +98,7 @@ git diff --check
 | 周倩颖 | [Sylvia777777](https://github.com/Sylvia777777)|
 | 艾克代·艾麦提 | [aabb0101aa](https://github.com/aabb0101aa) |
 | 周煜莹 | [ttaango](https://github.com/ttaango) |
-| 顾金昊 | — |
+| 顾金昊 | [wudengfen-gjh](https://github.com/wudengfen-gjh) |
 | 李沁婷 | — |
 | 谢礼翰 | — |
 | 瞿李睿 | [qulirui](https://github.com/qulirui) |
@@ -127,4 +127,3 @@ git diff --check
 | 王涛 | [wt192349](https://github.com/wt192349) |
 | 俞楷锋 | — |
 | 戴欣阳 | — |
-
