@@ -1,0 +1,502 @@
+## 用例：修改用户名
+参与者:城市通小程序用户(主要参与者)､城市通后台服务系统(次要参与者)
+目标:用户在城市通小程序修改用户名并保存成功
+范围:城市通微信小程序
+前置条件:用户已登录城市通小程序,进入个人资料编辑页面
+后置事件:系统记录本次操作日志;修改成功则用户名更新,失败则保留原有用户名
+发生频率:较低,用户一般不会频繁修改用户名
+
+### 主事件流
+1. 用户进入个人资料页,点击用户名编辑入口
+2. 小程序加载并展示当前用户名
+3. 用户输入新的用户名
+4. 用户点击保存,自动检查用户名格式(长度､禁用特殊符号等)
+5. 小程序将新用户名发送给后台系统
+6. 后台校验:检查用户名是否已被占用､是否含敏感内容
+7. 后台更新数据库中的用户名
+8. 后台返回修改成功结果
+9. 小程序提示修改成功,刷新页面展示新用户名
+10. 系统写入操作日志,用例结束
+
+### 备选事件流
+1a:点击用户名编辑入口,页面跳转失败
+1. 提示页面加载失败
+2. 停留在个人资料页,用例结束
+
+2a:网络异常,无法加载当前用户名
+1. 提示网络错误,加载失败
+2. 返回个人主页,用例结束
+
+3a:用户放弃修改,点击返回
+1. 不保存改动,保留原用户名
+2. 返回资料页,用例结束
+
+4a:自动检查不通过(名字太长/太短､包含非法符号)
+1. 弹出格式错误提示
+2. 返回编辑框,回到步骤3 重新输入
+
+6a:用户名已被其他用户占用
+1. 提示“该用户名已被占用,请更换”
+2. 返回编辑框,回到步骤3
+
+6b:用户名包含敏感违规词汇
+1. 提示内容违规,无法使用
+2. 返回编辑框,回到步骤3
+
+6c:登录态失效
+1. 提示登录过期,跳转登录页面
+2. 用例终止
+
+6d:服务器故障/网络断开
+1. 提示提交失败,请稍后重试
+2. 停留在编辑页面,可再次提交
+
+## 1.用例图 Use Case Diagram
+```plantuml
+@startuml 用例图-城市通小程序
+title 城市通微信小程序· 用例图
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+actor "小程序用户" as User
+actor "运营管理员" as Operator
+actor "系统管理员" as Admin
+rectangle "城市通微信小程序" {
+usecase "登录授权" as UC1
+usecase "修改用户名/密码" as UC2
+usecase "查询公交路线" as UC3
+usecase "查看站点实时到站" as UC4
+usecase "生成乘车码" as UC5
+usecase "扫码乘车扣费" as UC6
+usecase "收藏站点/线路" as UC7
+usecase "查看乘车订单" as UC8
+usecase "余额充值" as UC9
+usecase "乘车异常申诉" as UC10
+usecase "登录态校验" as UC11
+usecase "用户账号封禁/解封" as UC12
+usecase "线路站点维护" as UC13
+usecase "系统参数配置" as UC14
+usecase "推送乘车通知" as UC15
+}
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+User --> UC5
+User --> UC6
+User --> UC7
+User --> UC8
+User --> UC9
+User --> UC10
+Operator --> UC12
+Operator --> UC13
+Admin --> UC14
+Admin --> UC15
+UC2 ..> UC11 : <<include>>
+UC5 ..> UC11 : <<include>>
+UC6 ..> UC11 : <<include>>
+UC6 ..> UC10 : <<extend>>
+UC9 ..> UC11 : <<include>>
+@enduml
+## 2.类图 
+@startuml 类图-城市通小程序
+title 城市通微信小程序· 领域类图
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+hide circle
+abstract class Account {
+# accountId : String
+# name : String
+# phone : String
+# loginToken : String
+# status : AccountStatus
++ login(openId : String) : boolean
++ logout() : void
++ updateName(newName : String) : boolean
+}
+class AppUser {
+- userId : String
+- balance : BigDecimal
+- totalRideCount : int
++ createRideCode() : RideCode
++ recharge(amount : BigDecimal) : boolean
+}
+class Operator {
+- opId : String
+- workArea : String
++ lockUserAccount(uid : String) : void
++ maintainRoute(route : BusRoute) : void
+}
+class SysAdmin {
+- roleKey : String
++ setConfig(key : String, value : String) : void
++ pushNotice(user : AppUser, msg : String) : void
+}
+class BusRoute {
+- routeId : String
+- routeName : String
+- direction : String
+- price : BigDecimal
++ getStationList() : List<BusStation>
+}
+class BusStation {
+- stationId : String
+- stationName : String
+- longitude : Double
+- latitude : Double
+}
+class RealTimeInfo {
+- infoId : String
+- arriveTime : int
+- busCarNo : String
+}
+class RideCode {
+- codeId : String
+- validTime : Date
+- status : CodeStatus
++ isValid() : boolean
+}
+class RideOrder {
+- orderId : String
+- rideTime : Date
+- deductAmount : BigDecimal
+- startStation : String
+- endStation : String
+- status : OrderStatus
+}
+class Favorite {
+- favId : String
+- createTime : Date
+}
+class Appeal {
+- appealId : String
+- content : String
+- submitTime : Date
+- result : String
++ audit() : void
+}
+class Notice {
+- noticeId : String
+- content : String
+- pushTime : Date
++ sendToUser() : void
+}
+interface Checkable {
++ checkNameRule(name:String):boolean
+}
+interface DeductStrategy {
++ calcFee(route:BusRoute):BigDecimal
+}
+class NormalDeductStrategy
+class DiscountDeductStrategy
+enum AccountStatus {
+正常
+锁定
+封禁
+}
+enum CodeStatus {
+未使用
+已核销
+已过期
+}
+enum OrderStatus {
+扣费成功
+扣费失败
+申诉中
+申诉完成
+}
+Account <|-- AppUser
+Account <|-- Operator
+Operator <|-- SysAdmin
+AppUser "1" --> "*" RideOrder : 产生
+AppUser "1" --> "*" Favorite : 收藏
+AppUser "1" --> "*" Appeal : 提交
+AppUser "1" --> "*" Notice : 接收
+BusRoute "1" *-- "*" BusStation : 途经站点
+BusStation "1" --> "*" RealTimeInfo : 车辆实时信息
+AppUser "1" --> "*" RideCode : 生成
+RideOrder ..> DeductStrategy : 依赖
+RideCode --> CodeStatus
+RideOrder --> OrderStatus
+Account --> AccountStatus
+BusRoute ..|> Checkable : 实现
+DeductStrategy <|.. NormalDeductStrategy : 实现
+DeductStrategy <|.. DiscountDeductStrategy : 实现
+@enduml
+## 3.对象图
+@startuml 对象图-城市通用户实例快照
+title 对象图· 用户乘车实例快照
+skinparam shadowing false
+hide empty members
+object "u1 : AppUser" as u1 {
+userId = "U20261030001"
+name = "李明"
+phone = "138****1234"
+balance = 20.00
+status = "正常"
+}
+object "r1 : BusRoute" as r1 {
+routeId = "R101"
+routeName = "101 路"
+price = 2.00
+}
+object "s1 : BusStation" as s1 {
+stationId = "S001"
+stationName = "人民广场站"
+}
+object "o1 : RideOrder" as o1 {
+orderId = "ORD20261030001"
+rideTime = "2026-10-30 08:20"
+deductAmount = 2.00
+status = "扣费成功"
+}
+u1 -- o1 : 拥有订单
+o1 -- r1 : 对应线路
+o1 -- s1 : 上车站点
+note right of o1
+本次乘车扣费正常,无申诉记录
+end note
+@enduml
+## 4.时序图
+@startuml 时序图-修改用户名
+title 时序图· 城市通小程序修改用户名流程
+autonumber
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+actor "小程序用户" as U
+participant "小程序前端UI" as UI
+participant "UserController" as C
+participant "UserService" as US
+participant "NameCheckService" as CS
+participant "UserRepository" as UR
+database "MySQL" as DB
+U -> UI : 进入个人资料页,点击编辑用户名
+UI -> C : GET /user/info
+activate C
+C -> US : getUserInfo(userId)
+activate US
+US --> C : 用户信息(原始用户名)
+deactivate US
+C --> UI : 返回用户信息
+UI --> U : 展示当前用户名
+U -> UI : 输入新用户名,点击保存
+UI -> UI : 前端校验格式(长度､特殊符号)
+alt 前端格式校验失败
+UI --> U : 提示格式错误,返回编辑框
+else 前端校验通过
+UI -> C : PUT /user/name {userId,newName}
+activate C
+C -> US : checkLoginStatus(userId)
+alt 登录态失效
+C --> UI : 401 登录过期
+UI --> U : 跳转登录页
+else 登录有效
+C -> CS : checkNameDuplicate(newName)
+activate CS
+CS --> C : 查重结果
+deactivate CS
+alt 用户名已占用/ 含敏感词
+C --> UI : 提示用户名不可用
+UI --> U : 返回编辑框
+else 校验全部通过
+C -> UR : updateUserName(userId,newName)
+activate UR
+UR -> DB : UPDATE user SET name=?
+DB --> UR : ok
+UR --> C : 更新成功
+deactivate UR
+C -> US : saveOperateLog(userId,"修改用户名")
+C --> UI : 返回成功结果
+UI --> U : 提示修改成功,刷新页面
+end
+end
+deactivate C
+end
+@enduml
+## 5.活动图
+@startuml 活动图-修改用户名
+title 活动图(泳道)· 修改用户名流程
+skinparam shadowing false
+skinparam ActivityDiamondBackgroundColor #FFF6E5
+|小程序用户|
+start
+:进入个人资料页面;
+:点击用户名编辑入口;
+|小程序前端|
+:加载原有用户名并展示;
+if (用户是否输入新名称并保存?) then (保存)
+|小程序前端|
+:前端校验用户名格式;
+if (格式合法?) then (合法)
+|后台系统|
+:校验用户登录状态;
+if (登录有效?) then (有效)
+|后台系统|
+:校验用户名是否重复､敏感;
+if (用户名可用?) then (可用)
+|后台系统|
+:更新数据库用户名;
+:写入操作日志;
+|小程序前端|
+:提示成功,刷新页面;
+|小程序用户|
+:查看新用户名;
+stop
+else (不可用)
+|小程序前端|
+:提示用户名已占用/违规;
+|小程序用户|
+:重新输入用户名;
+endif
+else (登录过期)
+|小程序前端|
+:提示登录失效,跳转登录页;
+stop
+endif
+else (格式不合法)
+|小程序前端|
+:提示格式错误;
+|小程序用户|
+:重新输入用户名;
+endif
+else (放弃修改,点击返回)
+|小程序前端|
+:不保存修改;
+:返回个人资料页;
+stop
+endif
+@enduml
+## 6.组件图
+@startuml 组件图-Legacy语法
+title 组件图· 城市通小程序系统(Legacy 方括号语法)
+skinparam shadowing false
+skinparam componentStyle uml2
+package "微信小程序端" {
+[小程序前端] as WXApp
+}
+package "接入层" {
+[API 网关] as GW
+}
+package "业务服务层" {
+[用户服务] as UserSvc
+[公交实时服务] as BusSvc
+[乘车码服务] as CodeSvc
+[订单支付服务] as PaySvc
+[消息通知服务] as MsgSvc
+}
+package "数据与外部依赖" {
+[MySQL 数据库] as DB
+[Redis 缓存] as Cache
+[微信支付] as WXPay
+[微信消息推送] as WXMsg
+}
+() "I 用户管理" as IUser
+() "I 公交查询" as IBus
+() "I 乘车码" as ICode
+() "I 订单支付" as IPay
+() "I 消息推送" as IMsg
+() "HTTPS" as IHttp
+WXApp - IHttp
+IHttp -- GW : 提供
+GW ..> IUser : 调用
+GW ..> IBus : 调用
+GW ..> ICode : 调用
+GW ..> IPay : 调用
+IUser -- UserSvc : 实现
+IBus -- BusSvc : 实现
+ICode -- CodeSvc : 实现
+IPay -- PaySvc : 实现
+IMsg -- MsgSvc : 实现
+CodeSvc ..> IUser : 依赖
+PaySvc ..> IUser : 依赖
+MsgSvc ..> IUser : 依赖
+UserSvc ..> DB
+BusSvc ..> DB
+PaySvc ..> DB
+UserSvc ..> Cache
+BusSvc ..> Cache
+PaySvc ..> WXPay
+MsgSvc ..> WXMsg
+@enduml
+## 7.部署图
+@startuml 部署图-城市通小程序
+title 部署图· 城市通小程序系统
+skinparam shadowing false
+skinparam nodeBackgroundColor #F4F8FC
+node "用户手机" as Phone {
+artifact "微信APP + 城市通小程序" as MiniApp
+}
+node "微信平台" as WXPlatform {
+artifact "微信开放平台鉴权" as Auth
+}
+node "云边界" as Edge {
+artifact "WAF + 负载均衡" as LB
+}
+node "应用服务器(云服务器)×2" as AppNode {
+artifact "city-api.jar(SpringBoot 后端)" as API
+artifact "定时任务服务" as Job
+}
+node "缓存服务器" as RedisNode {
+artifact "Redis 7" as Redis
+}
+node "数据库服务器(主从)" as DBNode {
+database "MySQL 主库" as MySQLMaster
+database "MySQL 从库" as MySQLSlave
+}
+cloud "微信支付服务" as WXPayCloud
+cloud "微信订阅消息推送" as WXNotify
+MiniApp --> Auth : 微信授权登录
+MiniApp --> LB : HTTPS 请求
+LB --> API : 负载分发
+API --> MySQLMaster : JDBC
+API --> Redis : 缓存
+Job --> MySQLMaster : 订单对账､过期码清理
+MySQLMaster --> MySQLSlave : 主从同步
+API --> WXPayCloud : 支付下单､回调
+API --> WXNotify : 推送乘车通知
+@enduml
+## 8.状态图
+@startuml 状态图-用户账号状态
+title 状态机图· AppUser 用户账号生命周期
+skinparam shadowing false
+[*] --> 未授权: 微信进入小程序
+note right of 锁定
+锁定状态下,禁止修改用户名､生成乘车码､充值
+end note
+未授权--> 正常: 微信授权登录成功
+正常--> 登录失效: token 过期
+登录失效--> 正常: 重新登录
+正常--> 锁定: 多次修改资料异常/ 扣费异常
+锁定--> 正常: 管理员审核解封
+锁定--> 封禁: 严重违规
+正常--> 封禁: 后台直接封禁
+封禁--> [*]
+@enduml
+## 9.时间图
+@startuml 时间图-修改用户名状态
+title 时间图· 修改用户名操作状态变迁
+scale 1.0
+robust "小程序前端UI" as UI
+concise "UserService 用户服务" as US
+robust "数据库用户记录" as DBRec
+@0
+UI is 展示个人主页
+US is 空闲
+DBRec is 原始名称
+@2
+UI is 编辑用户名
+US is 空闲
+@5
+UI is 提交校验中
+US is 校验用户名
+@8
+US is 更新数据
+DBRec is 更新中
+@10
+UI is 修改成功提示
+US is 写入操作日志
+DBRec is 新用户名
+@12
+UI is 刷新个人主页
+US is 空闲
+@enduml
