@@ -73,7 +73,7 @@ git diff --check
 | 丁燕楠 | [yanwang-yan](https://github.com/yanwang-yan) |
 | 江翊宁 | [fall12138](https://github.com/fall12138) |
 | 唐嘉卓 | — |
-| 周振豪 | — |
+| 周振豪 | [0703kafka](https://github.com/0703kafka)|
 | 蔡可欣 | [0824-maker](https://github.com/0824-maker) |
 | 夏薇 | [tangshi1999](https://github.com/tangshi1999) |
 | 闫玉菲 | [beautifu1-girl2006] (https://github.com/beautifu1-girl2006)|
