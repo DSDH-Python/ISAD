@@ -8,17 +8,41 @@
   /* ---------- 1. 进度跟踪（localStorage） ---------- */
   var TOTAL = 9;
   function key(ch){ return "isad_dt_ch" + ch + "_read"; }
-  function isRead(ch){ return localStorage.getItem(key(ch)) === "1"; }
-  function setRead(ch, v){ localStorage.setItem(key(ch), v ? "1" : "0"); }
+  function showStorageError(error){
+    if(!error || (error.name !== "SecurityError" && error.name !== "QuotaExceededError")) throw error;
+    var txt = document.getElementById("progress-txt");
+    if(txt) txt.textContent = "无法访问本地学习进度（浏览器存储受限），请检查浏览器设置后重试。";
+    var btn = document.getElementById("markRead");
+    if(btn){
+      btn.textContent = "本地进度不可用";
+      btn.setAttribute("aria-label", "无法访问本地学习进度，请检查浏览器设置后重试");
+      btn.setAttribute("aria-live", "polite");
+      btn.disabled = true;
+    }
+    return false;
+  }
+  function isRead(ch){
+    try { return localStorage.getItem(key(ch)) === "1"; }
+    catch(error){ showStorageError(error); return null; }
+  }
+  function setRead(ch, v){
+    try { localStorage.setItem(key(ch), v ? "1" : "0"); return true; }
+    catch(error){ return showStorageError(error); }
+  }
 
   function renderIndexProgress(){
     var bar = document.getElementById("progress-fill");
     var txt = document.getElementById("progress-txt");
     if(!bar) return;
     var n = 0;
-    for(var i=1;i<=TOTAL;i++){ if(isRead(i)) n++; }
+    for(var i=1;i<=TOTAL;i++){
+      var read = isRead(i);
+      if(read === null) return;
+      if(read) n++;
+    }
     var pct = Math.round(n/TOTAL*100);
     bar.style.width = pct + "%";
+    bar.setAttribute("aria-valuenow", pct);
     if(txt) txt.textContent = "已读 " + n + " / " + TOTAL + " 章（" + pct + "%）";
   }
 
@@ -29,15 +53,18 @@
     var ch = btn.getAttribute("data-ch");
     function sync(){
       var dot = document.getElementById("readDot");
-      if(isRead(ch)){
-        btn.textContent = "✓ 已标记为已读";
-        btn.classList.add("ghost");
-        if(dot) dot.classList.add("on");
-      }
+      var read = isRead(ch);
+      btn.disabled = read === null;
+      if(read === null) return;
+      btn.textContent = read ? "✓ 已标记为已读" : "标记为已读";
+      btn.classList.toggle("ghost", read);
+      btn.setAttribute("aria-pressed", String(read));
+      if(dot) dot.classList.toggle("on", read);
     }
     sync();
     btn.addEventListener("click", function(){
-      setRead(ch, !isRead(ch));
+      var read = isRead(ch);
+      if(read === null || !setRead(ch, !read)) return;
       sync();
       renderIndexProgress();
     });
@@ -47,22 +74,39 @@
   function wireTerms(){
     var tip = document.getElementById("termtip");
     if(!tip) return;
-    document.addEventListener("mouseover", function(e){
-      var t = e.target.closest && e.target.closest(".term");
+    tip.setAttribute("role", "tooltip");
+    Array.prototype.forEach.call(document.querySelectorAll(".term"), function(t){
+      if(!t.hasAttribute("tabindex")) t.tabIndex = 0;
+    });
+    function show(t){
       if(!t) return;
+      if(!t.hasAttribute("tabindex")) t.tabIndex = 0;
+      var describedBy = (t.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean);
+      if(describedBy.indexOf("termtip") === -1) describedBy.push("termtip");
+      t.setAttribute("aria-describedby", describedBy.join(" "));
       tip.textContent = t.getAttribute("data-def") || "";
       tip.style.display = "block";
       var r = t.getBoundingClientRect();
-      var x = r.left, y = r.bottom + 8;
-      tip.style.left = Math.max(8, x) + "px";
+      var x = Math.min(Math.max(8, r.left), window.innerWidth - tip.offsetWidth - 8);
+      var y = r.bottom + 8;
+      if(y + tip.offsetHeight > window.innerHeight) y = r.top - tip.offsetHeight - 8;
+      y = Math.max(8, Math.min(y, window.innerHeight - tip.offsetHeight - 8));
+      tip.style.left = x + "px";
       tip.style.top = y + "px";
-      if(y + tip.offsetHeight > window.innerHeight){
-        tip.style.top = (r.top - tip.offsetHeight - 8) + "px";
-      }
+    }
+    function termFromEvent(e){ return e.target.closest && e.target.closest(".term"); }
+    document.addEventListener("mouseover", function(e){
+      var t = termFromEvent(e);
+      if(t && !t.contains(e.relatedTarget)) show(t);
     });
     document.addEventListener("mouseout", function(e){
-      var t = e.target.closest && e.target.closest(".term");
-      if(t) tip.style.display = "none";
+      var t = termFromEvent(e);
+      if(t && !t.contains(e.relatedTarget)) tip.style.display = "none";
+    });
+    document.addEventListener("focusin", function(e){ show(termFromEvent(e)); });
+    document.addEventListener("focusout", function(e){
+      var t = termFromEvent(e);
+      if(t && !t.contains(e.relatedTarget)) tip.style.display = "none";
     });
   }
 
@@ -92,6 +136,10 @@
     if(lb) return lb;
     lb = document.createElement("div");
     lb.id = "pptLightbox";
+    lb.setAttribute("role", "dialog");
+    lb.setAttribute("aria-modal", "true");
+    lb.setAttribute("aria-label", "课件图片浏览");
+    lb.tabIndex = -1;
     lb.innerHTML =
       '<span class="lb-count"></span>' +
       '<button class="lb-nav lb-prev" type="button" aria-label="上一页">\u2039</button>' +
@@ -111,13 +159,17 @@
     if(!lbState) return;
     var st = lbState.gallery.__ppt;
     lbImg.src = st.slides[lbState.index].getAttribute("src");
+    lbImg.alt = st.slides[lbState.index].getAttribute("alt") || "放大查看课件图片";
     lbCount.textContent = (lbState.index + 1) + " / " + st.total;
   }
+  var previousFocus = null;
   function openLightbox(gallery, index){
     ensureBox();
+    previousFocus = document.activeElement;
     lbState = {gallery:gallery, index:index};
     sync();
     lb.style.display = "flex";
+    lb.focus();
   }
   function nav(d){
     if(!lbState) return;
@@ -127,7 +179,12 @@
     lbState.index = n;
     st.go(n);            /* 主图与灯箱同步 */
   }
-  function close(){ lb.style.display = "none"; lbState = null; }
+  function close(){
+    lb.style.display = "none";
+    lbState = null;
+    if(previousFocus && typeof previousFocus.focus === "function") previousFocus.focus();
+    previousFocus = null;
+  }
   window.__pptSyncLightbox = function(gallery, idx){
     if(lbState && lbState.gallery === gallery){ lbState.index = idx; sync(); }
   };
@@ -136,6 +193,18 @@
     if(e.key === "ArrowLeft"){ nav(-1); }
     else if(e.key === "ArrowRight"){ nav(1); }
     else if(e.key === "Escape"){ close(); }
+    else if(e.key === "Tab"){
+      if(document.activeElement === lb){
+        e.preventDefault();
+        (e.shiftKey ? lbNext : lbPrev).focus();
+      }else if(e.shiftKey && document.activeElement === lbPrev){
+        e.preventDefault();
+        lbNext.focus();
+      }else if(!e.shiftKey && document.activeElement === lbNext){
+        e.preventDefault();
+        lbPrev.focus();
+      }
+    }
   });
 
   /* ---- 把每个 .ppt-gallery 就地升级为「单页大图 + 左右箭头」轮播 ---- */
@@ -143,17 +212,35 @@
     if(gallery.classList.contains("ppt-enhanced")) return;      /* 幂等 */
     var imgs = Array.prototype.slice.call(gallery.querySelectorAll("figure img"));
     if(imgs.length < 1) return;
-    if(imgs.length === 1){ gallery.classList.add("ppt-single"); return; }  /* 单图：整宽显示 */
+    if(imgs.length === 1){
+      gallery.classList.add("ppt-single");
+      gallery.__ppt = {go:function(){}, total:1, slides:imgs};
+      imgs[0].setAttribute("tabindex", "0");
+      imgs[0].setAttribute("role", "button");
+      var alt = imgs[0].getAttribute("alt");
+      imgs[0].setAttribute("aria-label", alt ? "放大查看：" + alt : "放大查看课件图片");
+      imgs[0].addEventListener("click", function(){ openLightbox(gallery, 0); });
+      imgs[0].addEventListener("keydown", function(e){
+        if(e.key === "Enter" || e.key === " "){
+          e.preventDefault();
+          openLightbox(gallery, 0);
+        }
+      });
+      return;
+    }
     gallery.classList.add("ppt-enhanced");
 
     var wrap = document.createElement("div");
     wrap.className = "ppt-carousel";
     wrap.tabIndex = 0;
+    wrap.setAttribute("role", "region");
+    wrap.setAttribute("aria-roledescription", "轮播");
+    wrap.setAttribute("aria-label", "课件轮播，共 " + imgs.length + " 页");
     wrap.innerHTML =
       '<div class="ppt-stage">' +
         '<img class="ppt-current" alt="">' +
         '<button class="ppt-zoombtn" type="button">放大</button>' +
-        '<span class="ppt-count"></span>' +
+        '<span class="ppt-count" role="status" aria-live="polite" aria-atomic="true"></span>' +
         '<button class="ppt-nav ppt-prev" type="button" aria-label="上一页">\u2039</button>' +
         '<button class="ppt-nav ppt-next" type="button" aria-label="下一页">\u203a</button>' +
       '</div>' +
@@ -203,18 +290,20 @@
     wrap.querySelector(".ppt-zoombtn").addEventListener("click", function(e){ e.stopPropagation(); openLightbox(gallery, idx); });
 
     wrap.addEventListener("keydown", function(e){
+      if(e.target !== wrap) return;
       if(e.key === "ArrowLeft"){ e.preventDefault(); go(idx - 1); }
       else if(e.key === "ArrowRight"){ e.preventDefault(); go(idx + 1); }
     });
 
     var x0 = null;
-    wrap.addEventListener("touchstart", function(e){ if(e.touches.length === 1) x0 = e.touches[0].clientX; }, {passive:true});
+    wrap.addEventListener("touchstart", function(e){ x0 = e.touches.length === 1 ? e.touches[0].clientX : null; }, {passive:true});
     wrap.addEventListener("touchend", function(e){
-      if(x0 === null) return;
+      if(x0 === null || !e.changedTouches.length) return;
       var dx = e.changedTouches[0].clientX - x0;
       if(Math.abs(dx) > 40){ go(dx < 0 ? idx + 1 : idx - 1); }
       x0 = null;
     }, {passive:true});
+    wrap.addEventListener("touchcancel", function(){ x0 = null; }, {passive:true});
 
     render();
   }

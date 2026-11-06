@@ -13,6 +13,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 html,body{margin:0;padding:0}
+:focus-visible{outline:3px solid var(--accent); outline-offset:3px}
 body{
   position:relative; isolation:isolate;
   font-family:"微软雅黑","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
@@ -201,9 +202,9 @@ th{background:var(--light); color:var(--dark)}
 
 /* 术语浮窗 */
 .term{border-bottom:1px dotted var(--teal); cursor:help; color:var(--teal); font-weight:600}
-#termtip{position:fixed; z-index:200; max-width:320px; background:var(--dark); color:#fff;
+#termtip{position:fixed; z-index:200; background:var(--dark); color:#fff;
   font-size:13px; line-height:1.6; padding:10px 12px; border-radius:8px; box-shadow:0 6px 20px rgba(0,0,0,.25);
-  display:none; pointer-events:none}
+  display:none; pointer-events:none; max-width:min(320px,calc(100vw - 16px)); max-height:calc(100vh - 16px); overflow:auto}
 #termtip::after{content:""; position:absolute; bottom:-6px; left:18px; border:6px solid transparent;
   border-top-color:var(--dark); border-bottom:0}
 
@@ -340,7 +341,9 @@ details.fold[open] summary{border-bottom:1px solid var(--line); margin-bottom:10
 .pptgrid.ppt-enhanced{ display:block; }
 .ppt-gallery.ppt-enhanced > figure,
 .pptgrid.ppt-enhanced > figure{ display:none; }              /* 屏幕下由轮播替代 */
+.ppt-gallery.ppt-single,
 .pptgrid.ppt-single{ grid-template-columns:1fr; }            /* 单图整宽，避免半宽显示 */
+.pptgrid.ppt-single img{ cursor:zoom-in; }
 .ppt-carousel{ position:relative; }
 .ppt-carousel:focus{ outline:none; }
 .ppt-carousel:focus-visible{ box-shadow:0 0 0 3px rgba(15,110,140,.25); border-radius:12px; }
@@ -385,4 +388,14 @@ details.fold[open] summary{border-bottom:1px solid var(--line); margin-bottom:10
   .ppt-gallery.ppt-enhanced > figure,
   .pptgrid.ppt-enhanced > figure{ display:block; }
   .ppt-carousel{ display:none !important; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    scroll-behavior:auto !important;
+    transition-duration:.01ms !important;
+  }
 }
