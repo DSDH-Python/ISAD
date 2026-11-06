@@ -1,0 +1,258 @@
+一、微信小程序：修改用户名/密码操作事件流
+前置条件
+用户已经登录小程序，服务端持有该用户有效会话Token。
+正常事件流（修改密码）
+1. 用户进入个人中心页面，点击【修改密码】按钮
+2. 小程序加载修改密码表单，展示输入项：旧密码、新密码、确认新密码
+3. 用户填写表单信息，点击提交
+4. 小程序前端校验：新密码与确认密码一致、密码长度符合规范
+    - 校验失败：弹窗提示错误，回到表单等待重新输入
+5. 小程序携带Token、旧密码、新密码向后端发起修改密码请求
+6. 后端校验Token有效性，根据Token定位用户账号
+7. 后端比对数据库中旧密码哈希值
+    - 旧密码不匹配：返回错误信息，小程序弹窗提示“原密码错误”
+8. 校验通过后，后端对新密码哈希加密，更新数据库用户密码字段
+9. 返回修改成功
+10. 小程序弹窗提示密码修改成功，跳转回个人中心，失效旧会话
+
+替代分支（修改用户名）
+流程大体一致，校验规则改为：新用户名不能与库中已有用户名重复，无需校验旧密码。
+
+修改密码顺序图（Sequence Diagram）
+```plantuml
+@startuml 修改密码顺序图
+actor 用户
+participant "小程序视图层\n(WXML)" as View
+participant "小程序逻辑层\n(JS)" as Logic
+participant "后端认证服务" as Server
+database "用户数据库" as DB
+
+用户 -> View: 点击【修改密码】
+View -> Logic: 加载修改密码表单页面
+用户 -> View: 输入旧密码、新密码、确认密码，提交
+View -> Logic: 提交表单数据
+Logic -> Logic: 前端校验(两次密码一致、格式合法)
+alt 前端校验失败
+    Logic --> View: 弹窗提示错误
+    View --> 用户: 展示提示信息
+else 前端校验通过
+    Logic -> Server: POST /api/user/modifyPwd(token,oldPwd,newPwd)
+    Server -> Server: 校验token是否有效
+    alt token无效
+        Server --> Logic: 返回401 未授权
+        Logic --> View: 提示登录失效，请重新登录
+    else token有效
+        Server -> DB: 查询用户信息，比对旧密码哈希
+        alt 旧密码不匹配
+            DB --> Server: 密码不匹配
+            Server --> Logic: 返回错误：原密码错误
+            Logic --> View: 弹窗提示原密码错误
+        else 旧密码匹配
+            Server -> DB: 更新用户密码为新密码哈希
+            DB --> Server: 更新成功
+            Server --> Logic: 返回修改成功
+            Logic --> View: 弹窗：密码修改成功
+            View --> 用户: 提示成功，返回个人中心
+        end
+    end
+end
+@enduml
+二、图书馆管理系统 UML 模型
+### 1. Use Case Diagram 用例图
+参与者：读者、图书管理员、系统管理员
+@startuml 图书馆用例图
+left to right direction
+actor Reader as "读者"
+actor Librarian as "图书管理员"
+actor Admin as "系统管理员"
+rectangle 图书馆管理系统 {
+    usecase UC1 as "查询图书"
+    usecase UC2 as "借阅图书"
+    usecase UC3 as "归还图书"
+    usecase UC4 as "预约图书"
+    usecase UC5 as "查看借阅记录"
+    usecase UC6 as "新增图书"
+    usecase UC7 as "图书信息维护"
+    usecase UC8 as "读者账号管理"
+    usecase UC9 as "统计借阅报表"
+    usecase UC10 as "系统参数配置"
+}
+Reader --> UC1
+Reader --> UC2
+Reader --> UC3
+Reader --> UC4
+Reader --> UC5
+Librarian --> UC1
+Librarian --> UC6
+Librarian --> UC7
+Librarian --> UC8
+Librarian --> UC9
+Admin --> UC10
+Admin --> UC8
+@enduml
+2. Sequence Diagram 顺序图：读者借书
+@startuml 借书顺序图
+actor 读者
+participant "前端页面" as Web
+participant "借阅服务" as BorrowService
+participant "图书服务" as BookService
+participant "用户服务" as UserService
+database DB
+
+读者 -> Web: 发起借书请求(图书编号)
+Web -> BorrowService: 请求借书
+BorrowService -> UserService: 校验读者账号状态、是否超期欠费
+alt 用户状态异常
+    UserService --> BorrowService: 禁止借阅
+    BorrowService --> Web: 提示：账号异常，无法借书
+    Web --> 读者: 提示信息
+else 用户正常
+    BorrowService -> BookService: 查询图书库存、是否可借
+    alt 图书无库存
+        BookService --> BorrowService: 库存不足
+        BorrowService --> Web: 提示图书已被借完
+        Web --> 读者: 提示
+    else 可借
+        BorrowService -> DB: 创建借阅记录，扣减库存
+        DB --> BorrowService: 写入成功
+        BorrowService --> Web: 借书成功
+        Web --> 读者: 借书成功，生成借阅单
+    end
+end
+@enduml
+3. Class Diagram 类图
+@startuml 图书馆类图
+class User{
+    +userId:String
+    +userName:String
+    +password:String
+    +userType:int
+    +status:int
+    +login()
+}
+class Reader extends User{
+    +borrowList:List<BorrowRecord>
+    +borrowBook()
+    +returnBook()
+}
+class Librarian extends User{
+    +addBook()
+    +editBook()
+}
+class Admin extends User{
+    +configSystem()
+}
+class Book{
+    +bookId:String
+    +title:String
+    +author:String
+    +isbn:String
+    +stock:int
+    +searchInfo()
+}
+class BorrowRecord{
+    +recordId:String
+    +borrowTime:Date
+    +returnTime:Date
+    +status:int
+}
+Reader "1" -- "*" BorrowRecord : 拥有
+Book "1" -- "*" BorrowRecord : 关联
+@enduml
+4. Object Diagram 对象图
+@startuml 对象图
+object r1:Reader{
+    userId: "R001"
+    userName: "张三"
+    userType: 0
+    status: 正常
+}
+object b1:Book{
+    bookId:"B1001"
+    title:"软件工程导论"
+    author:"张海藩"
+    stock:3
+}
+object rec1:BorrowRecord{
+    recordId:"REC2026103001"
+    borrowTime:"2026-10-30"
+    returnTime:null
+    status:已借出
+}
+r1 -- rec1
+b1 -- rec1
+@enduml
+5. Activity Diagram 活动图：读者还书流程
+@startuml 还书活动图
+start
+:读者提交还书;
+:扫描图书条码;
+:查询对应借阅记录;
+if(记录是否存在?) then (不存在)
+    :提示无此借阅记录;
+else (存在)
+    :检查是否超期;
+    if(超期?) then (是)
+        :计算罚金;
+        :读者缴纳罚金;
+    endif
+    :更新借阅记录状态为【已归还】;
+    :图书库存+1;
+    :提示还书完成;
+endif
+end
+@enduml
+6.Component Diagram 组件图
+@startuml 组件图
+component "前端Web小程序" as WebApp
+component "用户认证组件" as Auth
+component "图书管理组件" as BookCmp
+component "借阅业务组件" as BorrowCmp
+component "统计报表组件" as ReportCmp
+database "数据库服务" as DB
+
+WebApp --> Auth : 调用登录接口
+WebApp --> BookCmp : 查询/维护图书
+WebApp --> BorrowCmp : 借书还书
+WebApp --> ReportCmp : 查看报表
+Auth --> DB
+BookCmp --> DB
+BorrowCmp --> DB
+ReportCmp --> DB
+@enduml
+7. Deployment Diagram 部署图
+@startuml 部署图
+node "用户手机端" as Phone{
+    artifact "微信小程序" as MiniProgram
+}
+node "Nginx服务器" as Nginx
+node "应用服务器(SpringBoot)" as AppServer{
+    artifact "图书馆后端服务.jar" as ServerJar
+}
+node "MySQL数据库服务器" as MysqlServer{
+    database "lib_db" as LibDB
+}
+Phone --> Nginx : https
+Nginx --> AppServer
+AppServer --> MysqlServer : jdbc
+@enduml
+8.State Diagram 状态图：图书对象生命周期
+@startuml 图书状态图
+[*] --> 可借阅
+可借阅 --> 已借出 : 读者借书
+已借出 --> 可借阅 : 读者归还
+可借阅 --> 下架封存 : 管理员下架
+已借出 --> 下架封存 : 逾期丢失/损毁
+下架封存 --> [*]
+@enduml
+9. Timing Diagram 时间图：图书库存变化
+@startuml Timing 时间图
+clock 图书库存
+concise "图书库存" as stock
+@0: stock is 3
+@5: stock is 2 : 借出一本
+@12: stock is 3 : 归还一本
+@20: stock is 1 : 借出两本
+@30: stock is 0 : 借出最后一本
+@40: stock is 2 : 归还两本
+@enduml
