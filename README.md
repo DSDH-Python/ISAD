@@ -126,4 +126,4 @@ git diff --check
 | 张力文 | [alexwen111](https://github.com/alexwen111) |
 | 王涛 | [wt192349](https://github.com/wt192349) |
 | 俞楷锋 | — |
-| 戴欣阳 | — |
+| 戴欣阳 |[EirianDiana](https://github.com/EirianDiana) |
